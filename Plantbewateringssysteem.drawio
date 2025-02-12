@@ -1,0 +1,216 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36" version="26.0.11">
+  <diagram name="Pagina-1" id="iaynxuXYIdowNMk3amep">
+    <mxGraphModel dx="2327" dy="746" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-12" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="-40" y="560" width="280" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-6" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="380" y="160" width="320" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-29" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="-200" y="160" width="440" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-22" value="&#xa;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 11px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;&quot;&gt;Analoge PIN&lt;/span&gt;&lt;div style=&quot;forced-color-adjust: none; color: rgb(0, 0, 0); font-family: Helvetica; font-size: 11px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;(analogRead())&lt;/div&gt;&#xa;&#xa;" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-8" target="uEzxJGhIn5lUvs8XJFBr-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="420" as="sourcePoint" />
+            <mxPoint x="240" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-23" value="&#xa;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 11px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;&quot;&gt;Analoge PIN&lt;/span&gt;&lt;div style=&quot;forced-color-adjust: none; color: rgb(0, 0, 0); font-family: Helvetica; font-size: 11px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;(analogRead())&lt;/div&gt;&#xa;&#xa;" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-7" target="uEzxJGhIn5lUvs8XJFBr-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="310" y="340" as="sourcePoint" />
+            <mxPoint x="210" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-25" value="ADAPTER NETSPANNING" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-190" y="65" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-27" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-25" target="uEzxJGhIn5lUvs8XJFBr-14">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-110" y="140" as="sourcePoint" />
+            <mxPoint x="240" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-33" value="WATERSLANG" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-11" target="uEzxJGhIn5lUvs8XJFBr-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="420" as="sourcePoint" />
+            <mxPoint x="240" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-37" value="Geeft voeding" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-10" target="uEzxJGhIn5lUvs8XJFBr-11">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="520" as="sourcePoint" />
+            <mxPoint x="240" y="470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-38" value="Aansluiting&amp;nbsp;&lt;div&gt;Relais&amp;nbsp;&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212)); color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(aan/uit)&lt;/span&gt;&lt;/div&gt;" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-34" target="uEzxJGhIn5lUvs8XJFBr-11">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="420" as="sourcePoint" />
+            <mxPoint x="240" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-9" value="Temperatuursensor Waterproof DS18B20 kit" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="170" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-10" value="FireBeetle ESP32-E" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="346.6666666666667" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-14" value="VOEDING (3.3 V)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-190" y="170.00666666666666" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-15" value="geeft voeding voor" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-14" target="uEzxJGhIn5lUvs8XJFBr-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="463.33333333333337" as="sourcePoint" />
+            <mxPoint x="240" y="405" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-17" value="Digitale PIN&amp;nbsp;&lt;div&gt;(library.h)&lt;/div&gt;" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-9" target="uEzxJGhIn5lUvs8XJFBr-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="463.33333333333337" as="sourcePoint" />
+            <mxPoint x="240" y="405" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-24" value="BATTERIJ (3.3 V)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-190" y="253.33333333333331" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-28" value="geeft voeding voor" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-24" target="uEzxJGhIn5lUvs8XJFBr-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-30" y="393.33333333333337" as="sourcePoint" />
+            <mxPoint x="90" y="393.33333333333337" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-30" value="WATERDICHTE BEHUIZING" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-30" y="175.83666666666664" width="100" height="58.333333333333336" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-34" value="RELAIS" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-90" y="405.00333333333333" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-35" value="Digitale PIN" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-34" target="uEzxJGhIn5lUvs8XJFBr-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="463.33333333333337" as="sourcePoint" />
+            <mxPoint x="240" y="405" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-4" value="BLOEMPOT" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="500" y="165.83" width="80" height="34.17" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-7" value="Resistieve BVH sensor" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="230" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-8" value="Capacitieve BVH sensor" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="351.67" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-13" value="WATERRESERVOIR" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-30" y="680" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-11" value="Waterpomp" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="610" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-39" value="PANIC BUTTON" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-250" y="346.67" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-40" value="Digitale PIN" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-39" target="uEzxJGhIn5lUvs8XJFBr-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="190" y="420" as="sourcePoint" />
+            <mxPoint x="240" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-41" value="Technieker" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="340" y="10" width="30" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-42" value="Plantenverzorger" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="-300" y="480" width="30" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-45" value="Dringend water geven" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-42" target="uEzxJGhIn5lUvs8XJFBr-39">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="70" y="470" as="sourcePoint" />
+            <mxPoint x="120" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-47" value="Water bijvullen" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-42" target="uEzxJGhIn5lUvs8XJFBr-12">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="70" y="470" as="sourcePoint" />
+            <mxPoint x="120" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-48" value="Meststoffen toevoegen" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-42" target="uEzxJGhIn5lUvs8XJFBr-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="70" y="590" as="sourcePoint" />
+            <mxPoint x="-120" y="760" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-80" y="760" />
+              <mxPoint x="280" y="760" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-49" value="Moet kunnen opladen /&amp;nbsp;&lt;div&gt;op neststroom zetten&lt;/div&gt;" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-42" target="uEzxJGhIn5lUvs8XJFBr-25">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="70" y="230" as="sourcePoint" />
+            <mxPoint x="120" y="180" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-320" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-51" value="Kan elke component&lt;div&gt;fysiek beheren of&lt;/div&gt;&lt;div&gt;configureren&lt;/div&gt;" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-41" target="uEzxJGhIn5lUvs8XJFBr-29">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="70" y="350" as="sourcePoint" />
+            <mxPoint x="120" y="300" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="200" y="40" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-52" value="&#xa;&lt;span style=&quot;color: rgb(0, 0, 0); font-family: Helvetica; font-size: 11px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;&quot;&gt;Kan elke component&lt;/span&gt;&lt;div style=&quot;forced-color-adjust: none; color: rgb(0, 0, 0); font-family: Helvetica; font-size: 11px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;fysiek beheren of&lt;/div&gt;&lt;div style=&quot;forced-color-adjust: none; color: rgb(0, 0, 0); font-family: Helvetica; font-size: 11px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;&quot;&gt;configureren&lt;/div&gt;&#xa;&#xa;" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-41" target="uEzxJGhIn5lUvs8XJFBr-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="350" y="90" as="sourcePoint" />
+            <mxPoint x="400" y="40" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-53" value="Beheren&lt;div&gt;Waterpomp&lt;/div&gt;" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-41" target="uEzxJGhIn5lUvs8XJFBr-12">
+          <mxGeometry x="-0.3913" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="170" y="380" as="sourcePoint" />
+            <mxPoint x="220" y="330" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="290" y="190" />
+              <mxPoint x="280" y="290" />
+              <mxPoint x="280" y="520" />
+            </Array>
+            <mxPoint y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-58" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="220" y="55" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-54" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="uEzxJGhIn5lUvs8XJFBr-58">
+          <mxGeometry width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-55" value="VSC" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="uEzxJGhIn5lUvs8XJFBr-58">
+          <mxGeometry x="12" y="40" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-57" value="LAPTOP" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="uEzxJGhIn5lUvs8XJFBr-58">
+          <mxGeometry x="7" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-60" value="Configuratie +&lt;div&gt;code opladen&lt;/div&gt;&lt;div&gt;via USB-C&lt;/div&gt;" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-54" target="uEzxJGhIn5lUvs8XJFBr-10">
+          <mxGeometry x="0.2625" y="-5" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="170" y="230" as="sourcePoint" />
+            <mxPoint x="220" y="180" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="220" y="300" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uEzxJGhIn5lUvs8XJFBr-61" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="uEzxJGhIn5lUvs8XJFBr-41" target="uEzxJGhIn5lUvs8XJFBr-54">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="170" y="230" as="sourcePoint" />
+            <mxPoint x="220" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
