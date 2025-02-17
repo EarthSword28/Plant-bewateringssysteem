@@ -15,6 +15,9 @@ unsigned long timer = 0;
 void setup() {
   pinMode(RESISTANCE_HUMIDITY_SENSOR, INPUT);
   pinMode(CAPACITANCE_HUMIDITY_SENSOR, INPUT);
+  resistanceHumidityValue = 0;
+  capacitanceHumidityValue = 0;
+
   Serial.begin(9600);
   timer = millis();
 }
@@ -22,5 +25,7 @@ void setup() {
 void loop() {
   if (millis() - timer >= TIME_INTERVAL) {
     timer = millis();
+    resistanceHumidityValue = analogRead(RESISTANCE_HUMIDITY_SENSOR);
+    capacitanceHumidityValue = analogRead(CAPACITANCE_HUMIDITY_SENSOR);
   }
 }
