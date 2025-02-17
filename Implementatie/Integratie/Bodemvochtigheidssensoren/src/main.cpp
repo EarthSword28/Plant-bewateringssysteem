@@ -19,4 +19,8 @@ void setup() {
   timer = millis();
 }
 
-void loop() {}
+void loop() {
+  if (millis() - timer >= TIME_INTERVAL) {
+    timer = millis();
+  }
+}
