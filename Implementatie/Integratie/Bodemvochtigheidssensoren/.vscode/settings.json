@@ -1,0 +1,5 @@
+{
+  "git.promptToSaveFilesBeforeCommit": "staged",
+  "git.promptToSaveFilesBeforeStash": "staged",
+  "git.openRepositoryInParentFolders": "always"
+}
