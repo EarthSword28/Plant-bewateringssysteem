@@ -31,7 +31,7 @@ const byte LEGENDA_DRY = 1;
 const byte LEGENDA_WET = 2;
 const byte LEGENDA_WATER = 3;
 
-const int TIME_INTERVAL = 2500;
+const int TIME_INTERVAL = 5000;
 unsigned long timer = 0;
 
 byte get_resistance_category(int sensorValue) {
