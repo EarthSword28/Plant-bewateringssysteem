@@ -1,10 +1,21 @@
 #include <Arduino.h>
 #include <OneWire.h>
+#include <DallasTemperature.h>
 
 #include <calibrate_bodemvochtigheidssensoren.h>
 
 #define RESISTANCE_HUMIDITY_SENSOR 36
 #define CAPACITANCE_HUMIDITY_SENSOR 39
+
+#define ONE_WIRE_BUS 17
+
+// Setup a oneWire instance to communicate with any OneWire device
+OneWire oneWire(ONE_WIRE_BUS);    
+
+// Pass oneWire reference to DallasTemperature library
+DallasTemperature sensors(&oneWire);
+
+float temperature = 0;
 
 unsigned long resistanceHumidityValue = 0;
 unsigned long capacitanceHumidityValue = 0;
@@ -78,6 +89,14 @@ byte get_final_category(byte resistanceCategory, byte capacitanceCategory) {
   }
 }
 
+float get_temperature() {
+  // Send the command to get temperatures
+  sensors.requestTemperatures(); 
+
+  //return the temperature in Celsius
+  return sensors.getTempCByIndex(0);
+}
+
 void setup() {
   pinMode(RESISTANCE_HUMIDITY_SENSOR, INPUT);
   pinMode(CAPACITANCE_HUMIDITY_SENSOR, INPUT);
@@ -86,6 +105,9 @@ void setup() {
 
   Serial.begin(9600);
   timer = millis();
+  
+  // Start up the sensor library
+  sensors.begin(); 
 }
 
 void loop() {
@@ -98,5 +120,9 @@ void loop() {
     resistanceHumidityCategory = get_resistance_category(resistanceHumidityValue);
     capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);
     finalHumidityCategory = get_final_category(resistanceHumidityCategory, capacitanceHumidityCategory);
+
+    if (finalHumidityCategory >= LEGENDA_WET) {
+      temperature = get_temperature();
+    }
   }
 }
