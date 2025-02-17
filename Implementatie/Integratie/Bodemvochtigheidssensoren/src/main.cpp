@@ -20,6 +20,9 @@ float temperature = 0;
 unsigned long resistanceHumidityValue = 0;
 unsigned long capacitanceHumidityValue = 0;
 
+unsigned long wateringTimeInterval = 0;
+boolean WATER_SWITCH;
+
 byte resistanceHumidityCategory = 0;
 byte capacitanceHumidityCategory = 0;
 byte finalHumidityCategory = 0;
@@ -123,6 +126,15 @@ void loop() {
 
     if (finalHumidityCategory >= LEGENDA_WET) {
       temperature = get_temperature();
+
+      if (temperature > 25) {
+        wateringTimeInterval = 2000;
+        WATER_SWITCH = HIGH;
+      }
+      else if (temperature > 5) {
+        wateringTimeInterval = 1000;
+        WATER_SWITCH = HIGH;
+      }
     }
   }
 }
