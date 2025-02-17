@@ -50,6 +50,34 @@ byte get_capacitance_category(int sensorValue) {
   }
 }
 
+byte get_final_category(byte resistanceCategory, byte capacitanceCategory) {
+  if (capacitanceCategory == LEGENDA_DRY) {
+    return LEGENDA_DRY;
+  }
+  else if (capacitanceCategory == LEGENDA_WET) {
+    if (resistanceCategory == LEGENDA_DRY) {
+      return LEGENDA_DRY;
+    }
+    else {
+      return LEGENDA_WET;
+    }
+  }
+  else if (capacitanceCategory == LEGENDA_WATER) {
+    if (resistanceCategory == LEGENDA_DRY) {
+      return LEGENDA_DRY;
+    }
+    else if (resistanceCategory == LEGENDA_WET) {
+      return LEGENDA_WET;
+    }
+    else {
+      return LEGENDA_WATER;
+    }
+  }
+  else {
+    return resistanceCategory;
+  }
+}
+
 void setup() {
   pinMode(RESISTANCE_HUMIDITY_SENSOR, INPUT);
   pinMode(CAPACITANCE_HUMIDITY_SENSOR, INPUT);
@@ -66,5 +94,9 @@ void loop() {
 
     resistanceHumidityValue = analogRead(RESISTANCE_HUMIDITY_SENSOR);
     capacitanceHumidityValue = analogRead(CAPACITANCE_HUMIDITY_SENSOR);
+
+    resistanceHumidityCategory = get_resistance_category(resistanceHumidityValue);
+    capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);
+    finalHumidityCategory = get_final_category(resistanceHumidityCategory, capacitanceHumidityCategory);
   }
 }
