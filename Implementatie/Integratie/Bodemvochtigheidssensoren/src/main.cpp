@@ -9,6 +9,10 @@
 unsigned long resistanceHumidityValue = 0;
 unsigned long capacitanceHumidityValue = 0;
 
+byte resistanceHumidityCategory = 0;      // Legenda: NO Measurement = 0, DRY = 1, WET = 2, WATER = 3
+byte capacitanceHumidityCategory = 0;     // Legenda: NO Measurement = 0, DRY = 1, WET = 2, WATER = 3
+byte finalHumidityCategory = 0;           // Legenda: NO Measurement = 0, DRY = 1, WET = 2, WATER = 3
+
 const int TIME_INTERVAL = 2500;
 unsigned long timer = 0;
 
