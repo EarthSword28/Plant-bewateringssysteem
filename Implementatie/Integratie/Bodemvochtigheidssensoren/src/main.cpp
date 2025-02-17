@@ -124,7 +124,7 @@ void loop() {
     capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);
     finalHumidityCategory = get_final_category(resistanceHumidityCategory, capacitanceHumidityCategory);
 
-    if (finalHumidityCategory >= LEGENDA_WET) {
+    if (WATER_SWITCH == LOW && finalHumidityCategory >= LEGENDA_WET) {
       temperature = get_temperature();
 
       if (temperature > 25) {
