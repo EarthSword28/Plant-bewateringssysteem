@@ -38,3 +38,10 @@ const int LEGENDA_WATER = 3;
 // Timers
 const int TIME_INTERVAL_SENSORS = 5000;
 
+  // water geven
+const int WATERING_TIME_INTERVAL_SHORT = 1000;
+const int WATERING_TIME_INTERVAL_LONG = 2000;
+
+// Temperaturen
+const int MIN_TEMPERATURE = 5;
+const int MAX_TEMPERATURE = 25;
