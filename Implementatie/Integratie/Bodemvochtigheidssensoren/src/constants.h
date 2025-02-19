@@ -1,24 +1,24 @@
-// Minimum- en maximumwaarde voor de resistieve vochtigheidssensor om de interpretatie "DRY" te krijgen
+// Minimum- en maximumvalue of the resistance humidity sensor to recieve the interpretation "DRY"
 const int RESISTANCE_SENSOR_DRY_INTERVAL_MIN = 0;
 const int RESISTANCE_SENSOR_DRY_INTERVAL_MAX = 2060;
 
-// Minimum- en maximumwaarde voor de resistieve vochtigheidssensor om de interpretatie "WET" te krijgen
+// Minimum- en maximumvalue of the resistance humidity sensor to recieve the interpretation "WET"
 const int RESISTANCE_SENSOR_WET_INTERVAL_MIN = 2061;
 const int RESISTANCE_SENSOR_WET_INTERVAL_MAX = 2546;
 
-// Minimum- en maximumwaarde voor de resistieve vochtigheidssensor om de interpretatie "WATER" te krijgen
+// Minimum- en maximumvalue of the resistance humidity sensor to recieve the interpretation "WATER"
 const int RESISTANCE_SENSOR_WATER_INTERVAL_MIN = 2547;
 const int RESISTANCE_SENSOR_WATER_INTERVAL_MAX = 4095;
-
-// Minimum- en maximumwaarde voor de capacitieve vochtigheidssensor om de interpretatie "DRY" te krijgen
+ 
+// Minimum- en maximumvalue of the capacitance humidity sensor to recieve the interpretation "DRY"
 const int CAPACITANCE_SENSOR_DRY_INTERVAL_MIN = 2872;
 const int CAPACITANCE_SENSOR_DRY_INTERVAL_MAX = 4095;
 
-// Minimum- en maximumwaarde voor de capacitieve vochtigheidssensor om de interpretatie "WET" te krijgen
+// Minimum- en maximumvalue of the capacitance humidity sensor to recieve the interpretation "WET"
 const int CAPACITANCE_SENSOR_WET_INTERVAL_MIN = 2464;
 const int CAPACITANCE_SENSOR_WET_INTERVAL_MAX = 2871;
 
-// Minimum- en maximumwaarde voor de capacitieve vochtigheidssensor om de interpretatie "WATER" te krijgen
+// Minimum- en maximumvalue of the capacitance humidity sensor to recieve the interpretation "WATER"
 const int CAPACITANCE_SENSOR_WATER_INTERVAL_MIN = 0;
 const int CAPACITANCE_SENSOR_WATER_INTERVAL_MAX = 2463;
 
