@@ -6,10 +6,10 @@ const int MIN_TEMPERATUUR = 5;
 const int MAX_TEMPERATUUR = 25;
 
 // DONE: Categoriën vochtigheid
-const char HUMIDITY_NO_VALUE[] = "NO VALUE";
-const char HUMIDITY_DRY[] = "DRY";
-const char HUMIDITY_WET[] = "WET";
-const char HUMIDITY_WATER[] = "WATER";
+const char HUMIDITY_NO_VALUE[10] = "NO VALUE";
+const char HUMIDITY_DRY[10] = "DRY";
+const char HUMIDITY_WET[10] = "WET";
+const char HUMIDITY_WATER[10] = "WATER";
 
 // DONE: Statussen water geven (geen water, wél water)
 const int WATER_NIET_GEVEN = 0;
