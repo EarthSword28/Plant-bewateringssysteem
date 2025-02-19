@@ -1,172 +1,136 @@
 #include <Arduino.h>
+#include <config.h>
+
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-#include <constants.h>
-
+// DONE: Definieer juiste pinnummers voor sensoren
 #define RESISTANCE_HUMIDITY_SENSOR 36
 #define CAPACITANCE_HUMIDITY_SENSOR 39
 
-#define ONE_WIRE_BUS 12                   // temperature sensor
+#define ONE_WIRE_BUS 12                   // temperatuur sensor
 
-#define RELAY_MODULE 17                   // the relay for the pump
+#define RELAY_MODULE 17                   // de relay voor de pomp
 
-// Setup a oneWire instance to communicate with any OneWire device
+  // Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);    
 
-// Pass oneWire reference to DallasTemperature library
+  // Pass oneWire reference to DallasTemperature library
 DallasTemperature sensors(&oneWire);
 
-float temperature = 0;
-
-unsigned long resistanceHumidityValue = 0;
-unsigned long capacitanceHumidityValue = 0;
-
-unsigned long wateringTimeInterval = 0;
-boolean pumpSwitch;
-
-unsigned long resistanceHumidityCategory = 0;
-unsigned long capacitanceHumidityCategory = 0;
-unsigned long finalHumidityCategory = 0;
-
+// DONE: Variabelen om wachttijd tussen inlezen sensoren te kunnen regelen
 unsigned long timer = 0;
+
+// DONE: Variabelen om duurtijd van water geven te kunnen regelen
 unsigned long wateringTimer = 0;
 
-float get_temperature() {
-  // Send the command to get temperatures
+// DONE: Variabele om status van de waterpomp aan te geven, dit is nodig om te kunnen controlleren of de waterpomp gestopt moet worden
+boolean pompSatus;
+
+/**
+ * Bepaal de temperatuur, op basis van de gekozen temperatuursensor.
+ * Voor een digitale sensor zal dit anders zijn dan voor een analoge.
+ * Geeft de temperatuur in °C terug.
+ */
+int leesTemperatuur() {
+  // DONE: Implementeer zodat de temperatuur op de juiste manier wordt ingelezen
+    // Send the command to get temperatures
   sensors.requestTemperatures(); 
 
-  //return the temperature in Celsius
+    //return the temperature in Celsius
   return sensors.getTempCByIndex(0);
 }
 
-int get_resistance_category(int sensorValue) {
-  if (sensorValue >= RESISTANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_DRY_INTERVAL_MAX) {
-    return HUMIDITY_DRY;
-  }
-  else if (sensorValue >= RESISTANCE_SENSOR_WET_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_WET_INTERVAL_MAX) {
-    return HUMIDITY_WET;
-  }
-  else if (sensorValue >= RESISTANCE_SENSOR_WATER_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_WATER_INTERVAL_MAX) {
-    return HUMIDITY_WATER;
-  }
-  else {
-    return HUMIDITY_NO_VALUE;
-  }
+/**
+ * Bepaal de categorie van de capacitieve bodemvochtigheidssensor voor de gemeten sensorwaarde.
+ * We gebruiken hierbij de configuratie uit onze calibratie.  Per categorie checken we of de waarde
+ * tussen de MIN en de MAX valt.
+ * Opgelet!!  Gebruik enkel de categoriën uit je configuratiebestand!
+ */
+String berekenCategorieCapactieveBHV(int sensorwaarde) {
+  // TODO: Implementeer zodat de categorie voor de capacitieve BVH sensor wordt berekend.
+  return "";
 }
 
-int get_capacitance_category(int sensorValue) {
-  if (sensorValue >= CAPACITANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue <= CAPACITANCE_SENSOR_DRY_INTERVAL_MAX) {
-    return HUMIDITY_DRY;
-  }
-  else if (sensorValue >= CAPACITANCE_SENSOR_WET_INTERVAL_MIN && sensorValue <= CAPACITANCE_SENSOR_WET_INTERVAL_MAX) {
-    return HUMIDITY_WET;
-  }
-  else if (sensorValue >= CAPACITANCE_SENSOR_WATER_INTERVAL_MIN && sensorValue <= CAPACITANCE_SENSOR_WATER_INTERVAL_MAX) {
-    return HUMIDITY_WATER;
-  }
-  else {
-    return HUMIDITY_NO_VALUE;
-  }
+/**
+ * Bepaal de categorie van de resistieve bodemvochtigheidssensor voor de gemeten sensorwaarde.
+ * We gebruiken hierbij de configuratie uit onze calibratie.  Per categorie checken we of de waarde
+ * tussen de MIN en de MAX valt.
+ * Opgelet!!  Gebruik enkel de categoriën uit je configuratiebestand!
+ */
+String berekenCategorieResistieveBVH(int sensorwaarde) {
+  // TODO: Implementeer zodat de categorie voor de resistieve BVH sensor wordt berekend.
+  return "";
 }
 
-int get_final_category(int resistanceCategory, int capacitanceCategory) {
-  if (capacitanceCategory == HUMIDITY_DRY) {
-    return HUMIDITY_DRY;
-  }
-  else if (capacitanceCategory == HUMIDITY_WET) {
-    if (resistanceCategory == HUMIDITY_DRY) {
-      return HUMIDITY_DRY;
-    }
-    else {
-      return HUMIDITY_WET;
-    }
-  }
-  else if (capacitanceCategory == HUMIDITY_WATER) {
-    if (resistanceCategory == HUMIDITY_DRY) {
-      return HUMIDITY_DRY;
-    }
-    else if (resistanceCategory == HUMIDITY_WET) {
-      return HUMIDITY_WET;
-    }
-    else {
-      return HUMIDITY_WATER;
-    }
-  }
-  else {
-    return resistanceCategory;
-  }
+/**
+ * Bereken de samengestelde categorie voor beide bodemvochtigheidssensoren.
+ * Mogelijke strategiën: droogste wint altijd / één wint altijd / geen mogelijke categorie bij verschil
+ * Opgelet!!  Gebruik enkel de categoriën uit je configuratiebestand!
+ */
+String berekenSamengesteldeCategorie(String categorieResistieveBVH, String categorieCapacitieveBVH) {
+  // Todo: Implementeer zodat een samengstelde categorie wordt berekend.  Documenteer de strategie!
+  return "";
 }
 
-int read_sensors_and_give_water_if_neccesary(byte humidityCategory, int temp) {
-  if (humidityCategory == HUMIDITY_DRY) {
-    if (temp > MAX_TEMPERATURE) {
-      return WATERING_TIME_INTERVAL_LONG;
-    }
-    else if (temp > MIN_TEMPERATURE) {
-      return WATERING_TIME_INTERVAL_SHORT;
-    }
-    else {
-      return WATERING_TIME_INTERVAL_INACTIVE;
-    }
-  }
-  else {
-    return WATERING_TIME_INTERVAL_INACTIVE;
-  }
+/**
+ * Zet de waterpomp aan voor een bepaalde tijd.   
+ * Opgelet!!  Deze functie mag GEEN DELAY bevatten.  De duurtijd zal dus via een variabele moeten bijgehouden worden.
+ *            Het hoofdprogramma moet telkens controlleren of de duurtijd reeds verstreken is, via millis().
+ *            Gebruik een status om aan te geven dat de waterpomp aan het water geven is.
+ */
+void zetWaterpompAan(int duurtijd) {
+  // TODO: Implementeer code om de pomp aan te zetten
+
+  // TODO: Initialiseer de variabelen om de starttijd en duurtijd van het water geven te regelen
+ 
 }
 
-void start_watering() {
-  wateringTimer = millis();
-  pumpSwitch = HIGH;
-  digitalWrite(RELAY_MODULE, HIGH);
+/**
+ * Zet de waterpomp uit. 
+ * Opgelet!! Aangezien de zetWaterpompAan() functie geen delay bevat, zullen de variabelen die daar gebruikt worden
+ *           opnieuw geïnitialiseerd moeten worden bij het uitzetten van de pomp.
+ */
+void zetWaterpompUit() {
+  // TODO: Implementeer code om de pomp uit te zetten
+  
+  // TODO: Initialiseer de variabelen om de starrtijd en duurtijd van het water geven te regelen
+
 }
 
-void stop_watering() {
-  timer = millis();
-  pumpSwitch = LOW;
-  digitalWrite(RELAY_MODULE, LOW);
+/**
+ * Deze functie bevat alle code voor het uitlezen van de sensoren en om de waterpomp indien nodig aan te zetten.
+ * Het uitzetten van de waterpomp gebeurt niet hier maar in de loop() functie na controle of er voldoende tijd verstreken is.
+ */
+void leesSensorenEnGeefWaterIndienNodig() {
+  // TODO: Implementeer inlezen met correcte pinnen
+  int capacitieve_bvh_waarde = analogRead(0);
+  int resistieve_bvh_waarde = analogRead(0);
+  int temperatuur = leesTemperatuur();
+
+  // Bepaal individuele categoriën en samengestelde categorie
+  String categorieCapacitieveBVH = berekenCategorieCapactieveBHV(capacitieve_bvh_waarde);
+  String categorieResistieveBVH = berekenCategorieResistieveBVH(resistieve_bvh_waarde);
+  String categorie = berekenSamengesteldeCategorie(categorieCapacitieveBVH, categorieResistieveBVH);
+
+  // TODO: Beslis over water geven en pas de controles toe uit de flowchart.  
+  // !! Gebruik enkel de constanten uit de configuratie om met een categorie te vergelijken!
+  // !! Gebruik enkel de constanten uit de configuratie om de duurtijd van het water geven mee te geven
+  // !! Gebruik verder enkel de functies zetWaterpompAan() en zetWaterpompUit() om de waterpomp aan/uit te zetten
+
 }
 
 void setup() {
-  pinMode(RESISTANCE_HUMIDITY_SENSOR, INPUT);
-  pinMode(CAPACITANCE_HUMIDITY_SENSOR, INPUT);
-  pinMode(RELAY_MODULE, OUTPUT);
-  resistanceHumidityValue = 0;
-  capacitanceHumidityValue = 0;
-  digitalWrite(RELAY_MODULE, LOW);
+  // TODO: Implementeer de nodig code voor lezen sensoren (indien nodig)
 
-  pumpSwitch = LOW;
-  wateringTimeInterval = 0;
-
-  Serial.begin(9600);
-  timer = millis();
-  wateringTimer = millis();
-  
-  // Start up the sensor library
-  sensors.begin(); 
 }
 
 void loop() {
-  if (wateringTimeInterval != 0) {
-    if (pumpSwitch == LOW) {
-      start_watering();
-    }
-    else if (millis() - wateringTimer >= wateringTimeInterval) {
-      stop_watering();
-    }
-  }
-  else if (millis() - timer >= TIME_INTERVAL_SENSORS) {
-    timer = millis();
+  // We hebben huidige millis nodig om de verschillende processen te controleren (water geven / stoppen)
+  long huidigeMillis = millis();
+  
+  // TODO: Controleer of de waterpomp uitgezet moet worden en roep functie zetWaterpompUit() aan indien nodig
 
-    resistanceHumidityValue = analogRead(RESISTANCE_HUMIDITY_SENSOR);
-    capacitanceHumidityValue = analogRead(CAPACITANCE_HUMIDITY_SENSOR);
+  // TODO: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
 
-    resistanceHumidityCategory = get_resistance_category(resistanceHumidityValue);
-    capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);
-    finalHumidityCategory = get_final_category(resistanceHumidityCategory, capacitanceHumidityCategory);
-
-    temperature = get_temperature();
-
-    wateringTimeInterval = read_sensors_and_give_water_if_neccesary(finalHumidityCategory, temperature);
-  }
 }
