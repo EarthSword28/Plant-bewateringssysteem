@@ -48,8 +48,19 @@ int leesTemperatuur() {
  * Opgelet!!  Gebruik enkel de categoriën uit je configuratiebestand!
  */
 String berekenCategorieCapactieveBHV(int sensorwaarde) {
-  // TODO: Implementeer zodat de categorie voor de capacitieve BVH sensor wordt berekend.
-  return "";
+  // DONE: Implementeer zodat de categorie voor de capacitieve BVH sensor wordt berekend.
+  if (sensorwaarde >= CAPACITIEVE_SENSOR_DROOG_INTERVAL_MIN && sensorwaarde <= CAPACITIEVE_SENSOR_DROOG_INTERVAL_MAX) {
+    return HUMIDITY_DRY;
+  }
+  else if (sensorwaarde >= CAPACITIEVE_SENSOR_VOCHTIG_INTERVAL_MIN && sensorwaarde <= CAPACITIEVE_SENSOR_VOCHTIG_INTERVAL_MAX) {
+    return HUMIDITY_WET;
+  }
+  else if (sensorwaarde >= CAPACITIEVE_SENSOR_NAT_INTERVAL_MIN && sensorwaarde <= CAPACITIEVE_SENSOR_NAT_INTERVAL_MAX) {
+    return HUMIDITY_WATER;
+  }
+  else {
+    return HUMIDITY_NO_VALUE;
+  }
 }
 
 /**
@@ -60,13 +71,13 @@ String berekenCategorieCapactieveBHV(int sensorwaarde) {
  */
 String berekenCategorieResistieveBVH(int sensorwaarde) {
   // DONE: Implementeer zodat de categorie voor de resistieve BVH sensor wordt berekend.
-  if (sensorwaarde >= CAPACITIEVE_SENSOR_DROOG_INTERVAL_MIN && sensorwaarde <= CAPACITIEVE_SENSOR_DROOG_INTERVAL_MAX) {
+  if (sensorwaarde >= RESISTIEVE_SENSOR_DROOG_INTERVAL_MIN && sensorwaarde <= RESISTIEVE_SENSOR_DROOG_INTERVAL_MAX) {
     return HUMIDITY_DRY;
   }
-  else if (sensorwaarde >= CAPACITIEVE_SENSOR_VOCHTIG_INTERVAL_MIN && sensorwaarde <= CAPACITIEVE_SENSOR_VOCHTIG_INTERVAL_MAX) {
+  else if (sensorwaarde >= RESISTIEVE_SENSOR_VOCHTIG_INTERVAL_MIN && sensorwaarde <= RESISTIEVE_SENSOR_VOCHTIG_INTERVAL_MAX) {
     return HUMIDITY_WET;
   }
-  else if (sensorwaarde >= CAPACITIEVE_SENSOR_NAT_INTERVAL_MIN && sensorwaarde <= CAPACITIEVE_SENSOR_NAT_INTERVAL_MAX) {
+  else if (sensorwaarde >= RESISTIEVE_SENSOR_NAT_INTERVAL_MIN && sensorwaarde <= RESISTIEVE_SENSOR_NAT_INTERVAL_MAX) {
     return HUMIDITY_WATER;
   }
   else {
