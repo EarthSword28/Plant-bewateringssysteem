@@ -142,15 +142,13 @@ void zetWaterpompAan(int duurtijd) {
  * Opgelet!! Aangezien de zetWaterpompAan() functie geen delay bevat, zullen de variabelen die daar gebruikt worden
  *           opnieuw geïnitialiseerd moeten worden bij het uitzetten van de pomp.
  */
-void zetWaterpompUit(int huidigeTijd, int tijd, int duurtijd) {
-  if (huidigeTijd - tijd >= duurtijd) {
-    // DONE: Implementeer code om de pomp uit te zetten
-    digitalWrite(RELAY_MODULE, LOW);
-  
-    // DONE: Initialiseer de variabelen om de starrtijd en duurtijd van het water geven te regelen
-    pompStatus = LOW;
-    waterDuur = WATERING_TIME_INTERVAL_INACTIVE;
-  }
+void zetWaterpompUit() {
+  // DONE: Implementeer code om de pomp uit te zetten
+  digitalWrite(RELAY_MODULE, LOW);
+
+  // DONE: Initialiseer de variabelen om de starrtijd en duurtijd van het water geven te regelen
+  pompStatus = LOW;
+  waterDuur = WATERING_TIME_INTERVAL_INACTIVE;
 
 }
 
