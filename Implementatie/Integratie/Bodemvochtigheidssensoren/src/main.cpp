@@ -26,8 +26,8 @@ unsigned long wateringTimeInterval = 0;
 boolean pumpSwitch;
 
 unsigned long resistanceHumidityCategory = 0;
-unsigned long capacitanceHumidityCategory = 0;
-unsigned long finalHumidityCategory = 0;
+int capacitanceHumidityCategory = 0;
+int finalHumidityCategory = 0;
 
 unsigned long timer = 0;
 unsigned long wateringTimer = 0;
@@ -62,7 +62,7 @@ int get_capacitance_category(int sensorValue) {
   }
 }
 
-int get_final_category(byte resistanceCategory, byte capacitanceCategory) {
+int get_final_category(int resistanceCategory, int capacitanceCategory) {
   if (capacitanceCategory == HUMIDITY_DRY) {
     return HUMIDITY_DRY;
   }

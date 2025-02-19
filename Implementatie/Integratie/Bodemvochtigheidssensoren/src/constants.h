@@ -23,10 +23,10 @@ const int CAPACITANCE_SENSOR_WATER_INTERVAL_MIN = 0;
 const int CAPACITANCE_SENSOR_WATER_INTERVAL_MAX = 2463;
 
 // Legenda humidity
-char HUMIDITY_NO_VALUE[15] = "NO VALUE";
-char HUMIDITY_DRY[15] = "DRY";
-char HUMIDITY_WET[15] = "WET";
-char HUMIDITY_WATER[15] = "WATER";
+const int HUMIDITY_NO_VALUE = 0;
+const int HUMIDITY_DRY = 1;
+const int HUMIDITY_WET = 2;
+const int HUMIDITY_WATER = 3;
 
 // Timers
 const int TIME_INTERVAL_SENSORS = 5000;
