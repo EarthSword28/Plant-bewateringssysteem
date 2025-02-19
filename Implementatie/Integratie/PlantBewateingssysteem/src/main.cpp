@@ -22,10 +22,11 @@ DallasTemperature sensors(&oneWire);
 unsigned long timer = 0;
 
 // DONE: Variabelen om duurtijd van water geven te kunnen regelen
-unsigned long wateringTimer = 0;
+unsigned long waterTimer = 0;
+unsigned long waterDuur = 0;
 
 // DONE: Variabele om status van de waterpomp aan te geven, dit is nodig om te kunnen controlleren of de waterpomp gestopt moet worden
-boolean pompSatus;
+boolean pompStatus;
 
 /**
  * Bepaal de temperatuur, op basis van de gekozen temperatuursensor.
@@ -91,7 +92,7 @@ String berekenCategorieResistieveBVH(int sensorwaarde) {
  * Opgelet!!  Gebruik enkel de categoriën uit je configuratiebestand!
  */
 String berekenSamengesteldeCategorie(String categorieResistieveBVH, String categorieCapacitieveBVH) {
-  // Todo: Implementeer zodat een samengstelde categorie wordt berekend.  Documenteer de strategie!
+  // DONE: Implementeer zodat een samengstelde categorie wordt berekend.  Documenteer de strategie!
   if (categorieCapacitieveBVH == HUMIDITY_DRY) {
     return HUMIDITY_DRY;
   }
@@ -126,9 +127,13 @@ String berekenSamengesteldeCategorie(String categorieResistieveBVH, String categ
  *            Gebruik een status om aan te geven dat de waterpomp aan het water geven is.
  */
 void zetWaterpompAan(int duurtijd) {
-  // TODO: Implementeer code om de pomp aan te zetten
+  // DONE: Implementeer code om de pomp aan te zetten
+  digitalWrite(RELAY_MODULE, HIGH);
 
-  // TODO: Initialiseer de variabelen om de starttijd en duurtijd van het water geven te regelen
+  // DONE: Initialiseer de variabelen om de starttijd en duurtijd van het water geven te regelen
+  pompStatus = HIGH;
+  waterDuur = duurtijd;
+  waterTimer = millis();
  
 }
 
@@ -137,10 +142,15 @@ void zetWaterpompAan(int duurtijd) {
  * Opgelet!! Aangezien de zetWaterpompAan() functie geen delay bevat, zullen de variabelen die daar gebruikt worden
  *           opnieuw geïnitialiseerd moeten worden bij het uitzetten van de pomp.
  */
-void zetWaterpompUit() {
-  // TODO: Implementeer code om de pomp uit te zetten
+void zetWaterpompUit(int huidigeTijd, int tijd, int duurtijd) {
+  if (huidigeTijd - tijd >= duurtijd) {
+    // DONE: Implementeer code om de pomp uit te zetten
+    digitalWrite(RELAY_MODULE, LOW);
   
-  // TODO: Initialiseer de variabelen om de starrtijd en duurtijd van het water geven te regelen
+    // DONE: Initialiseer de variabelen om de starrtijd en duurtijd van het water geven te regelen
+    pompStatus = LOW;
+    waterDuur = WATERING_TIME_INTERVAL_INACTIVE;
+  }
 
 }
 
