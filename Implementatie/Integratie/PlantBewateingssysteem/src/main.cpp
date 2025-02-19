@@ -185,7 +185,21 @@ void leesSensorenEnGeefWaterIndienNodig() {
 }
 
 void setup() {
-  // TODO: Implementeer de nodig code voor lezen sensoren (indien nodig)
+  // DONE: Implementeer de nodig code voor lezen sensoren (indien nodig)
+  pinMode(RESISTANCE_HUMIDITY_SENSOR, INPUT);
+  pinMode(CAPACITANCE_HUMIDITY_SENSOR, INPUT);
+  pinMode(RELAY_MODULE, OUTPUT);
+  digitalWrite(RELAY_MODULE, LOW);
+
+  pompStatus = LOW;
+  waterDuur = WATERING_TIME_INTERVAL_INACTIVE;
+  
+  Serial.begin(9600);
+  timer = millis();
+  waterTimer = millis();
+  
+  // Start up the sensor library
+  sensors.begin();
 
 }
 
