@@ -159,9 +159,9 @@ void zetWaterpompUit(int huidigeTijd, int tijd, int duurtijd) {
  * Het uitzetten van de waterpomp gebeurt niet hier maar in de loop() functie na controle of er voldoende tijd verstreken is.
  */
 void leesSensorenEnGeefWaterIndienNodig() {
-  // TODO: Implementeer inlezen met correcte pinnen
-  int capacitieve_bvh_waarde = analogRead(0);
-  int resistieve_bvh_waarde = analogRead(0);
+  // DONE: Implementeer inlezen met correcte pinnen
+  int capacitieve_bvh_waarde = analogRead(CAPACITANCE_HUMIDITY_SENSOR);
+  int resistieve_bvh_waarde = analogRead(RESISTANCE_HUMIDITY_SENSOR);
   int temperatuur = leesTemperatuur();
 
   // Bepaal individuele categoriën en samengestelde categorie
@@ -173,6 +173,14 @@ void leesSensorenEnGeefWaterIndienNodig() {
   // !! Gebruik enkel de constanten uit de configuratie om met een categorie te vergelijken!
   // !! Gebruik enkel de constanten uit de configuratie om de duurtijd van het water geven mee te geven
   // !! Gebruik verder enkel de functies zetWaterpompAan() en zetWaterpompUit() om de waterpomp aan/uit te zetten
+  if (categorie == HUMIDITY_DRY) {
+    if (temperatuur > MAX_TEMPERATUUR) {
+      zetWaterpompAan(WATERING_TIME_INTERVAL_LONG);
+    }
+    else if (temperatuur > MIN_TEMPERATUUR) {
+      zetWaterpompAan(WATERING_TIME_INTERVAL_SHORT);
+    }
+  }
 
 }
 
