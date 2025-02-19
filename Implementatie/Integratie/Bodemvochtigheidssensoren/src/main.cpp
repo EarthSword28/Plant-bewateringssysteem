@@ -93,6 +93,7 @@ float get_temperature() {
 }
 
 void start_watering() {
+  wateringTimer = millis();
   pumpSwitch = HIGH;
   digitalWrite(RELAY_MODULE, HIGH);
 }
@@ -146,12 +147,10 @@ void loop() {
 
       if (temperature > MAX_TEMPERATURE) {
         wateringTimeInterval = WATERING_TIME_INTERVAL_LONG;
-        wateringTimer = millis();
         waterSwitch = HIGH;
       }
       else if (temperature > MIN_TEMPERATURE) {
         wateringTimeInterval = WATERING_TIME_INTERVAL_SHORT;
-        wateringTimer = millis();
         waterSwitch = HIGH;
       }
     }
