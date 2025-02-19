@@ -99,6 +99,7 @@ void start_watering() {
 }
 
 void stop_watering() {
+  timer = millis();
   waterSwitch = LOW;
   pumpSwitch = LOW;
   digitalWrite(RELAY_MODULE, LOW);
