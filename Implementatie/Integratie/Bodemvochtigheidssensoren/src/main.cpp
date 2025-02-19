@@ -17,6 +17,7 @@ unsigned long capacitanceHumidityValue = 0;
 
 unsigned long wateringTimeInterval = 0;
 boolean waterSwitch;
+boolean wateringSwitch;
 
 byte resistanceHumidityCategory = 0;
 byte capacitanceHumidityCategory = 0;
@@ -92,10 +93,13 @@ float get_temperature() {
 }
 
 void start_watering() {
+  wateringSwitch = HIGH;
   digitalWrite(RELAY_MODULE, HIGH);
 }
 
 void stop_watering() {
+  waterSwitch = LOW;
+  wateringSwitch = LOW;
   digitalWrite(RELAY_MODULE, LOW);
 }
 
@@ -108,6 +112,7 @@ void setup() {
   digitalWrite(RELAY_MODULE, LOW);
 
   waterSwitch = LOW;
+  wateringSwitch = LOW;
 
   Serial.begin(9600);
   timer = millis();
@@ -118,9 +123,13 @@ void setup() {
 }
 
 void loop() {
-  if (waterSwitch == HIGH && millis() - wateringTimer >= wateringTimeInterval) {
-    waterSwitch = LOW;
-    stop_watering();
+  if (waterSwitch == HIGH) {
+    if (wateringSwitch == LOW) {
+      start_watering();
+    }
+    else if (millis() - wateringTimer >= wateringTimeInterval) {
+      stop_watering();
+    }
   }
   else if (millis() - timer >= TIME_INTERVAL_SENSORS) {
     timer = millis();
@@ -139,13 +148,11 @@ void loop() {
         wateringTimeInterval = WATERING_TIME_INTERVAL_LONG;
         wateringTimer = millis();
         waterSwitch = HIGH;
-        start_watering();
       }
       else if (temperature > MIN_TEMPERATURE) {
         wateringTimeInterval = WATERING_TIME_INTERVAL_SHORT;
         wateringTimer = millis();
         waterSwitch = HIGH;
-        start_watering();
       }
     }
   }
