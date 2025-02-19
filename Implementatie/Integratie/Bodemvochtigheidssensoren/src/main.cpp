@@ -23,7 +23,6 @@ unsigned long resistanceHumidityValue = 0;
 unsigned long capacitanceHumidityValue = 0;
 
 unsigned long wateringTimeInterval = 0;
-boolean waterSwitch;
 boolean pumpSwitch;
 
 byte resistanceHumidityCategory = 0;
@@ -99,6 +98,23 @@ float get_temperature() {
   return sensors.getTempCByIndex(0);
 }
 
+int read_sensors_and_give_water_if_neccesary(byte humidityCategory, int temp) {
+  if (humidityCategory == HUMIDITY_DRY) {
+    if (temp > MAX_TEMPERATURE) {
+      return WATERING_TIME_INTERVAL_LONG;
+    }
+    else if (temp > MIN_TEMPERATURE) {
+      return WATERING_TIME_INTERVAL_SHORT;
+    }
+    else {
+      return WATERING_TIME_INTERVAL_INACTIVE;
+    }
+  }
+  else {
+    return WATERING_TIME_INTERVAL_INACTIVE;
+  }
+}
+
 void start_watering() {
   wateringTimer = millis();
   pumpSwitch = HIGH;
@@ -107,7 +123,6 @@ void start_watering() {
 
 void stop_watering() {
   timer = millis();
-  waterSwitch = LOW;
   pumpSwitch = LOW;
   digitalWrite(RELAY_MODULE, LOW);
 }
@@ -120,8 +135,8 @@ void setup() {
   capacitanceHumidityValue = 0;
   digitalWrite(RELAY_MODULE, LOW);
 
-  waterSwitch = LOW;
   pumpSwitch = LOW;
+  wateringTimeInterval = 0;
 
   Serial.begin(9600);
   timer = millis();
@@ -132,7 +147,7 @@ void setup() {
 }
 
 void loop() {
-  if (waterSwitch == HIGH) {
+  if (wateringTimeInterval != 0) {
     if (pumpSwitch == LOW) {
       start_watering();
     }
@@ -150,17 +165,8 @@ void loop() {
     capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);
     finalHumidityCategory = get_final_category(resistanceHumidityCategory, capacitanceHumidityCategory);
 
-    if (waterSwitch == LOW && finalHumidityCategory == HUMIDITY_DRY) {
-      temperature = get_temperature();
+    temperature = get_temperature();
 
-      if (temperature > MAX_TEMPERATURE) {
-        wateringTimeInterval = WATERING_TIME_INTERVAL_LONG;
-        waterSwitch = HIGH;
-      }
-      else if (temperature > MIN_TEMPERATURE) {
-        wateringTimeInterval = WATERING_TIME_INTERVAL_SHORT;
-        waterSwitch = HIGH;
-      }
-    }
+    wateringTimeInterval = read_sensors_and_give_water_if_neccesary(finalHumidityCategory, temperature);
   }
 }

@@ -32,6 +32,7 @@ const int HUMIDITY_WATER = 3;
 const int TIME_INTERVAL_SENSORS = 5000;
 
   // watering timers
+const int WATERING_TIME_INTERVAL_INACTIVE = 0;
 const int WATERING_TIME_INTERVAL_SHORT = 1000;
 const int WATERING_TIME_INTERVAL_LONG = 2000;
 
