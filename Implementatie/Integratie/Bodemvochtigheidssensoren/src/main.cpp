@@ -28,55 +28,55 @@ unsigned long wateringTimer = 0;
 
 byte get_resistance_category(int sensorValue) {
   if (sensorValue >= RESISTANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_DRY_INTERVAL_MAX) {
-    return LEGENDA_DRY;
+    return HUMIDITY_DRY;
   }
   else if (sensorValue >= RESISTANCE_SENSOR_WET_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_WET_INTERVAL_MAX) {
-    return LEGENDA_WET;
+    return HUMIDITY_WET;
   }
   else if (sensorValue >= RESISTANCE_SENSOR_WATER_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_WATER_INTERVAL_MAX) {
-    return LEGENDA_WATER;
+    return HUMIDITY_WATER;
   }
   else {
-    return LEGENDA_NO_VALUE;
+    return HUMIDITY_NO_VALUE;
   }
 }
 
 byte get_capacitance_category(int sensorValue) {
   if (sensorValue >= CAPACITANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue <= CAPACITANCE_SENSOR_DRY_INTERVAL_MAX) {
-    return LEGENDA_DRY;
+    return HUMIDITY_DRY;
   }
   else if (sensorValue >= CAPACITANCE_SENSOR_WET_INTERVAL_MIN && sensorValue <= CAPACITANCE_SENSOR_WET_INTERVAL_MAX) {
-    return LEGENDA_WET;
+    return HUMIDITY_WET;
   }
   else if (sensorValue >= CAPACITANCE_SENSOR_WATER_INTERVAL_MIN && sensorValue <= CAPACITANCE_SENSOR_WATER_INTERVAL_MAX) {
-    return LEGENDA_WATER;
+    return HUMIDITY_WATER;
   }
   else {
-    return LEGENDA_NO_VALUE;
+    return HUMIDITY_NO_VALUE;
   }
 }
 
 byte get_final_category(byte resistanceCategory, byte capacitanceCategory) {
-  if (capacitanceCategory == LEGENDA_DRY) {
-    return LEGENDA_DRY;
+  if (capacitanceCategory == HUMIDITY_DRY) {
+    return HUMIDITY_DRY;
   }
-  else if (capacitanceCategory == LEGENDA_WET) {
-    if (resistanceCategory == LEGENDA_DRY) {
-      return LEGENDA_DRY;
+  else if (capacitanceCategory == HUMIDITY_WET) {
+    if (resistanceCategory == HUMIDITY_DRY) {
+      return HUMIDITY_DRY;
     }
     else {
-      return LEGENDA_WET;
+      return HUMIDITY_WET;
     }
   }
-  else if (capacitanceCategory == LEGENDA_WATER) {
-    if (resistanceCategory == LEGENDA_DRY) {
-      return LEGENDA_DRY;
+  else if (capacitanceCategory == HUMIDITY_WATER) {
+    if (resistanceCategory == HUMIDITY_DRY) {
+      return HUMIDITY_DRY;
     }
-    else if (resistanceCategory == LEGENDA_WET) {
-      return LEGENDA_WET;
+    else if (resistanceCategory == HUMIDITY_WET) {
+      return HUMIDITY_WET;
     }
     else {
-      return LEGENDA_WATER;
+      return HUMIDITY_WATER;
     }
   }
   else {
@@ -143,7 +143,7 @@ void loop() {
     capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);
     finalHumidityCategory = get_final_category(resistanceHumidityCategory, capacitanceHumidityCategory);
 
-    if (waterSwitch == LOW && finalHumidityCategory == LEGENDA_DRY) {
+    if (waterSwitch == LOW && finalHumidityCategory == HUMIDITY_DRY) {
       temperature = get_temperature();
 
       if (temperature > MAX_TEMPERATURE) {

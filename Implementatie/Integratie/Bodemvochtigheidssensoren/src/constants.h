@@ -31,18 +31,18 @@ const int CAPACITANCE_SENSOR_WATER_INTERVAL_MIN = 0;
 const int CAPACITANCE_SENSOR_WATER_INTERVAL_MAX = 2463;
 
 // Legenda vochtigheid
-const int LEGENDA_NO_VALUE = 0;
-const int LEGENDA_DRY = 1;
-const int LEGENDA_WET = 2;
-const int LEGENDA_WATER = 3;
+const int HUMIDITY_NO_VALUE = 0;
+const int HUMIDITY_DRY = 1;
+const int HUMIDITY_WET = 2;
+const int HUMIDITY_WATER = 3;
 
 // Timers
 const int TIME_INTERVAL_SENSORS = 5000;
 
-  // water geven
+  // water geven timers
 const int WATERING_TIME_INTERVAL_SHORT = 1000;
 const int WATERING_TIME_INTERVAL_LONG = 2000;
 
-// Temperaturen
+// Temperatuur intervallen
 const int MIN_TEMPERATURE = 5;
 const int MAX_TEMPERATURE = 25;
