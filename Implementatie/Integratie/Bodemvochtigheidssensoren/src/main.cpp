@@ -4,6 +4,13 @@
 
 #include <constants.h>
 
+#define RESISTANCE_HUMIDITY_SENSOR 36     // resistieve vochtigheidssensor
+#define CAPACITANCE_HUMIDITY_SENSOR 39    // capacitieve vochtigheidssensor
+
+#define ONE_WIRE_BUS 12                   // temperatuursensor
+
+#define RELAY_MODULE 17                   // de relay voor de pomp
+
 // Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);    
 

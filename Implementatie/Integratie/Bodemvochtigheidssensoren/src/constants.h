@@ -1,11 +1,3 @@
-// Pins
-#define RESISTANCE_HUMIDITY_SENSOR 36     // resistieve vochtigheidssensor
-#define CAPACITANCE_HUMIDITY_SENSOR 39    // capacitieve vochtigheidssensor
-
-#define ONE_WIRE_BUS 12                   // temperatuursensor
-
-#define RELAY_MODULE 17                   // de relay voor de pomp
-
 // Minimum- en maximumwaarde voor de resistieve vochtigheidssensor om de interpretatie "DROOG" te krijgen
 const int RESISTANCE_SENSOR_DRY_INTERVAL_MIN = 0;
 const int RESISTANCE_SENSOR_DRY_INTERVAL_MAX = 2060;
