@@ -32,6 +32,14 @@ int finalHumidityCategory = 0;
 unsigned long timer = 0;
 unsigned long wateringTimer = 0;
 
+float get_temperature() {
+  // Send the command to get temperatures
+  sensors.requestTemperatures(); 
+
+  //return the temperature in Celsius
+  return sensors.getTempCByIndex(0);
+}
+
 int get_resistance_category(int sensorValue) {
   if (sensorValue >= RESISTANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_DRY_INTERVAL_MAX) {
     return HUMIDITY_DRY;
@@ -88,14 +96,6 @@ int get_final_category(int resistanceCategory, int capacitanceCategory) {
   else {
     return resistanceCategory;
   }
-}
-
-float get_temperature() {
-  // Send the command to get temperatures
-  sensors.requestTemperatures(); 
-
-  //return the temperature in Celsius
-  return sensors.getTempCByIndex(0);
 }
 
 int read_sensors_and_give_water_if_neccesary(byte humidityCategory, int temp) {
