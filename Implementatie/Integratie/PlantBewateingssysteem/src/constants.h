@@ -2,8 +2,8 @@
 const int TIME_INTERVAL_SENSORS = 5000;
 
 // DONE: Temperatuur schakelwaarden
-const int MIN_TEMPERATURE = 5;
-const int MAX_TEMPERATURE = 25;
+const int MIN_TEMPERATUUR = 5;
+const int MAX_TEMPERATUUR = 25;
 
 // DONE: Categoriën vochtigheid
 const char HUMIDITY_NO_VALUE[] = "NO VALUE";
@@ -12,8 +12,8 @@ const char HUMIDITY_WET[] = "WET";
 const char HUMIDITY_WATER[] = "WATER";
 
 // DONE: Statussen water geven (geen water, wél water)
-const int WATER_OFF = 0;
-const int WATER_ON = 1;
+const int WATER_NIET_GEVEN = 0;
+const int WATER_GEVEN = 1;
 
 // DONE: Duurtijden water geven (in milliseconden)
 const int WATERING_TIME_INTERVAL_INACTIVE = 0;
