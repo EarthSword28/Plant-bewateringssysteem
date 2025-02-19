@@ -92,7 +92,31 @@ String berekenCategorieResistieveBVH(int sensorwaarde) {
  */
 String berekenSamengesteldeCategorie(String categorieResistieveBVH, String categorieCapacitieveBVH) {
   // Todo: Implementeer zodat een samengstelde categorie wordt berekend.  Documenteer de strategie!
-  return "";
+  if (categorieCapacitieveBVH == HUMIDITY_DRY) {
+    return HUMIDITY_DRY;
+  }
+  else if (categorieCapacitieveBVH == HUMIDITY_WET) {
+    if (categorieResistieveBVH == HUMIDITY_DRY) {
+      return HUMIDITY_DRY;
+    }
+    else {
+      return HUMIDITY_WET;
+    }
+  }
+  else if (categorieCapacitieveBVH == HUMIDITY_WATER) {
+    if (categorieResistieveBVH == HUMIDITY_DRY) {
+      return HUMIDITY_DRY;
+    }
+    else if (categorieResistieveBVH == HUMIDITY_WET) {
+      return HUMIDITY_WET;
+    }
+    else {
+      return HUMIDITY_WATER;
+    }
+  }
+  else {
+    return categorieResistieveBVH;
+  }
 }
 
 /**
