@@ -1,3 +1,10 @@
+// Pins
+#define RESISTANCE_HUMIDITY_SENSOR 36     // resistieve vochtigheidssensor
+#define CAPACITANCE_HUMIDITY_SENSOR 39    // capacitieve vochtigheidssensor
+
+#define ONE_WIRE_BUS 17                   // temperatuursensor
+
+
 // Minimum- en maximumwaarde voor de resistieve vochtigheidssensor om de interpretatie "DROOG" te krijgen
 const int RESISTANCE_SENSOR_DRY_INTERVAL_MIN = 0;
 const int RESISTANCE_SENSOR_DRY_INTERVAL_MAX = 2060;
@@ -21,3 +28,13 @@ const int CAPACITANCE_SENSOR_WET_INTERVAL_MAX = 2871;
 // Minimum- en maximumwaarde voor de capacitieve vochtigheidssensor om de interpretatie "NAT" te krijgen
 const int CAPACITANCE_SENSOR_WATER_INTERVAL_MIN = 0;
 const int CAPACITANCE_SENSOR_WATER_INTERVAL_MAX = 2463;
+
+// Legenda vochtigheid
+const int LEGENDA_NO_VALUE = 0;
+const int LEGENDA_DRY = 1;
+const int LEGENDA_WET = 2;
+const int LEGENDA_WATER = 3;
+
+// Timers
+const int TIME_INTERVAL_SENSORS = 5000;
+
