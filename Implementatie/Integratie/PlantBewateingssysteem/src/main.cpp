@@ -60,7 +60,18 @@ String berekenCategorieCapactieveBHV(int sensorwaarde) {
  */
 String berekenCategorieResistieveBVH(int sensorwaarde) {
   // TODO: Implementeer zodat de categorie voor de resistieve BVH sensor wordt berekend.
-  return "";
+  if (sensorwaarde >= CAPACITIEVE_SENSOR_DROOG_INTERVAL_MIN && sensorwaarde <= CAPACITIEVE_SENSOR_DROOG_INTERVAL_MAX) {
+    return HUMIDITY_DRY;
+  }
+  else if (sensorwaarde >= CAPACITANCE_SENSOR_WET_INTERVAL_MIN && sensorwaarde <= CAPACITANCE_SENSOR_WET_INTERVAL_MAX) {
+    return HUMIDITY_WET;
+  }
+  else if (sensorwaarde >= CAPACITANCE_SENSOR_WATER_INTERVAL_MIN && sensorwaarde <= CAPACITANCE_SENSOR_WATER_INTERVAL_MAX) {
+    return HUMIDITY_WATER;
+  }
+  else {
+    return HUMIDITY_NO_VALUE;
+  }
 }
 
 /**
