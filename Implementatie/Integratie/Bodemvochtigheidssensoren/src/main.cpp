@@ -23,6 +23,7 @@ byte capacitanceHumidityCategory = 0;
 byte finalHumidityCategory = 0;
 
 unsigned long timer = 0;
+unsigned long wateringTimer = 0;
 
 byte get_resistance_category(int sensorValue) {
   if (sensorValue >= RESISTANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_DRY_INTERVAL_MAX) {
@@ -90,6 +91,14 @@ float get_temperature() {
   return sensors.getTempCByIndex(0);
 }
 
+void start_watering() {
+  digitalWrite(RELAY_MODULE, HIGH);
+}
+
+void stop_watering() {
+  digitalWrite(RELAY_MODULE, LOW);
+}
+
 void setup() {
   pinMode(RESISTANCE_HUMIDITY_SENSOR, INPUT);
   pinMode(CAPACITANCE_HUMIDITY_SENSOR, INPUT);
@@ -98,15 +107,22 @@ void setup() {
   capacitanceHumidityValue = 0;
   digitalWrite(RELAY_MODULE, LOW);
 
+  waterSwitch = LOW;
+
   Serial.begin(9600);
   timer = millis();
+  wateringTimer = millis();
   
   // Start up the sensor library
   sensors.begin(); 
 }
 
 void loop() {
-  if (millis() - timer >= TIME_INTERVAL_SENSORS) {
+  if (waterSwitch == HIGH && millis() - wateringTimer >= wateringTimeInterval) {
+    waterSwitch = LOW;
+    stop_watering();
+  }
+  else if (millis() - timer >= TIME_INTERVAL_SENSORS) {
     timer = millis();
 
     resistanceHumidityValue = analogRead(RESISTANCE_HUMIDITY_SENSOR);
@@ -121,11 +137,15 @@ void loop() {
 
       if (temperature > MAX_TEMPERATURE) {
         wateringTimeInterval = WATERING_TIME_INTERVAL_LONG;
+        wateringTimer = millis();
         waterSwitch = HIGH;
+        start_watering();
       }
       else if (temperature > MIN_TEMPERATURE) {
         wateringTimeInterval = WATERING_TIME_INTERVAL_SHORT;
+        wateringTimer = millis();
         waterSwitch = HIGH;
+        start_watering();
       }
     }
   }
