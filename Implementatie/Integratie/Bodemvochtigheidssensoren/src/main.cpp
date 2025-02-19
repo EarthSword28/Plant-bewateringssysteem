@@ -93,8 +93,10 @@ float get_temperature() {
 void setup() {
   pinMode(RESISTANCE_HUMIDITY_SENSOR, INPUT);
   pinMode(CAPACITANCE_HUMIDITY_SENSOR, INPUT);
+  pinMode(RELAY_MODULE, OUTPUT);
   resistanceHumidityValue = 0;
   capacitanceHumidityValue = 0;
+  digitalWrite(RELAY_MODULE, LOW);
 
   Serial.begin(9600);
   timer = millis();
