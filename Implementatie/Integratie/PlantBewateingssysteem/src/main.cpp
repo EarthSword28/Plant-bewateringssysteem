@@ -205,8 +205,14 @@ void loop() {
   // We hebben huidige millis nodig om de verschillende processen te controleren (water geven / stoppen)
   long huidigeMillis = millis();
   
-  // TODO: Controleer of de waterpomp uitgezet moet worden en roep functie zetWaterpompUit() aan indien nodig
+  // DONE: Controleer of de waterpomp uitgezet moet worden en roep functie zetWaterpompUit() aan indien nodig
+  if (pompStatus == HIGH && huidigeMillis - waterTimer >= waterDuur) {
+    zetWaterpompUit();
+  }
 
   // TODO: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
+  if (huidigeMillis - timer >= TIME_INTERVAL_SENSORS) {
+    leesSensorenEnGeefWaterIndienNodig();
+  }
 
 }
