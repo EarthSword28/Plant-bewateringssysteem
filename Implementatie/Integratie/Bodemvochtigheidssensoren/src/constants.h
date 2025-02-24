@@ -39,3 +39,6 @@ const int WATERING_TIME_INTERVAL_LONG = 2000;
 // Temperature intervals
 const int MIN_TEMPERATURE = 5;
 const int MAX_TEMPERATURE = 25;
+
+// Debugging
+const short DEBUG = 1; // Disable(0)/Enable(1) all traces
