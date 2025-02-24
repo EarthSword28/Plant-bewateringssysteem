@@ -4,7 +4,7 @@
 
 #include <constants.h>
 
-#define ARDUINOTRACE_ENABLE 0  // Disable(0)/Enable(1) all traces
+#define ARDUINOTRACE_ENABLE 1  // Disable(0)/Enable(1) all traces
 #include <ArduinoTrace.h>
 
 #define RESISTANCE_HUMIDITY_SENSOR 36
@@ -36,6 +36,7 @@ unsigned long timer = 0;
 unsigned long wateringTimer = 0;
 
 float get_temperature() {
+  TRACE();
   // Send the command to get temperatures
   sensors.requestTemperatures(); 
 
@@ -44,6 +45,7 @@ float get_temperature() {
 }
 
 int get_resistance_category(int sensorValue) {
+  TRACE();
   if (sensorValue >= RESISTANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_DRY_INTERVAL_MAX) {
     return HUMIDITY_DRY;
   }
@@ -59,6 +61,7 @@ int get_resistance_category(int sensorValue) {
 }
 
 int get_capacitance_category(int sensorValue) {
+  TRACE();
   if (sensorValue >= CAPACITANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue <= CAPACITANCE_SENSOR_DRY_INTERVAL_MAX) {
     return HUMIDITY_DRY;
   }
@@ -74,6 +77,7 @@ int get_capacitance_category(int sensorValue) {
 }
 
 int get_final_category(int resistanceCategory, int capacitanceCategory) {
+  TRACE();
   if (capacitanceCategory == HUMIDITY_DRY) {
     return HUMIDITY_DRY;
   }
@@ -102,6 +106,7 @@ int get_final_category(int resistanceCategory, int capacitanceCategory) {
 }
 
 int read_sensors_and_give_water_if_neccesary(byte humidityCategory, int temp) {
+  TRACE();
   if (humidityCategory == HUMIDITY_DRY) {
     if (temp > MAX_TEMPERATURE) {
       return WATERING_TIME_INTERVAL_LONG;
@@ -119,12 +124,14 @@ int read_sensors_and_give_water_if_neccesary(byte humidityCategory, int temp) {
 }
 
 void start_watering() {
+  TRACE();
   wateringTimer = millis();
   pumpSwitch = HIGH;
   digitalWrite(RELAY_MODULE, HIGH);
 }
 
 void stop_watering() {
+  TRACE();
   timer = millis();
   pumpSwitch = LOW;
   wateringTimeInterval = WATERING_TIME_INTERVAL_INACTIVE;
@@ -152,25 +159,42 @@ void setup() {
 
 void loop() {
   if (wateringTimeInterval != 0) {
+    TRACE();
+    DUMP(pumpSwitch);
+    DUMP(RELAY_MODULE);
     if (pumpSwitch == LOW) {
       start_watering();
     }
     else if (millis() - wateringTimer >= wateringTimeInterval) {
       stop_watering();
     }
+    DUMP(pumpSwitch);
+    DUMP(RELAY_MODULE);
+    BREAK();
   }
   else if (millis() - timer >= TIME_INTERVAL_SENSORS) {
+    TRACE();
     timer = millis();
+    DUMP(timer);
 
     resistanceHumidityValue = analogRead(RESISTANCE_HUMIDITY_SENSOR);
     capacitanceHumidityValue = analogRead(CAPACITANCE_HUMIDITY_SENSOR);
+    DUMP(resistanceHumidityValue);
+    DUMP(capacitanceHumidityValue);
 
     resistanceHumidityCategory = get_resistance_category(resistanceHumidityValue);
     capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);
     finalHumidityCategory = get_final_category(resistanceHumidityCategory, capacitanceHumidityCategory);
+    DUMP(resistanceHumidityCategory);
+    DUMP(capacitanceHumidityCategory);
+    DUMP(finalHumidityCategory);
 
     temperature = get_temperature();
+    DUMP(temperature);
 
     wateringTimeInterval = read_sensors_and_give_water_if_neccesary(finalHumidityCategory, temperature);
+    DUMP(wateringTimeInterval);
+
+    BREAK();
   }
 }
