@@ -4,7 +4,7 @@
 
 #include <constants.h>
 
-#define ARDUINOTRACE_ENABLE DEBUG
+#define ARDUINOTRACE_ENABLE 1  // Disable(0)/Enable(1) all traces
 #include <ArduinoTrace.h>
 
 #define RESISTANCE_HUMIDITY_SENSOR 36
@@ -176,11 +176,13 @@ void loop() {
     TRACE();
     timer = millis();
     DUMP(timer);
+    BREAK();
 
     resistanceHumidityValue = analogRead(RESISTANCE_HUMIDITY_SENSOR);
     capacitanceHumidityValue = analogRead(CAPACITANCE_HUMIDITY_SENSOR);
     DUMP(resistanceHumidityValue);
     DUMP(capacitanceHumidityValue);
+    BREAK();
 
     resistanceHumidityCategory = get_resistance_category(resistanceHumidityValue);
     capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);
@@ -188,9 +190,11 @@ void loop() {
     DUMP(resistanceHumidityCategory);
     DUMP(capacitanceHumidityCategory);
     DUMP(finalHumidityCategory);
+    BREAK();
 
     temperature = get_temperature();
     DUMP(temperature);
+    BREAK();
 
     wateringTimeInterval = read_sensors_and_give_water_if_neccesary(finalHumidityCategory, temperature);
     DUMP(wateringTimeInterval);
