@@ -25,9 +25,9 @@ unsigned long capacitanceHumidityValue = 0;
 unsigned long wateringTimeInterval = 0;
 boolean pumpSwitch;
 
-unsigned long resistanceHumidityCategory = 0;
-unsigned long capacitanceHumidityCategory = 0;
-unsigned long finalHumidityCategory = 0;
+unsigned short resistanceHumidityCategory = 0;
+unsigned short capacitanceHumidityCategory = 0;
+unsigned short finalHumidityCategory = 0;
 
 unsigned long timer = 0;
 unsigned long wateringTimer = 0;
