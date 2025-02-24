@@ -124,6 +124,7 @@ void start_watering() {
 void stop_watering() {
   timer = millis();
   pumpSwitch = LOW;
+  wateringTimeInterval = WATERING_TIME_INTERVAL_INACTIVE;
   digitalWrite(RELAY_MODULE, LOW);
 }
 
