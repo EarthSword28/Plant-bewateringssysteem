@@ -4,6 +4,9 @@
 
 #include <constants.h>
 
+#define ARDUINOTRACE_ENABLE 0  // Disable(0)/Enable(1) all traces
+#include <ArduinoTrace.h>
+
 #define RESISTANCE_HUMIDITY_SENSOR 36
 #define CAPACITANCE_HUMIDITY_SENSOR 39
 
