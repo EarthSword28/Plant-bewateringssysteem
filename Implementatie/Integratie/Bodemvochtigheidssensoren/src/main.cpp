@@ -20,6 +20,7 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass oneWire reference to DallasTemperature library
 DallasTemperature sensors(&oneWire);
 
+// float tempTrack = 0;    // sensor broke / DEBUG
 float temperature = 0;
 
 unsigned long resistanceHumidityValue = 0;
@@ -187,15 +188,17 @@ void loop() {
     DUMP(capacitanceHumidityValue);
     BREAK();
 
-    resistanceHumidityCategory = get_resistance_category(resistanceHumidityValue);
-    capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);
+    resistanceHumidityCategory = get_resistance_category(resistanceHumidityValue);                        // resistanceHumidityCategory = get_resistance_category(resistanceHumidityValue);
+    capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);                     // capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);
     finalHumidityCategory = get_final_category(resistanceHumidityCategory, capacitanceHumidityCategory);
     DUMP(resistanceHumidityCategory);
     DUMP(capacitanceHumidityCategory);
     DUMP(finalHumidityCategory);
     BREAK();
 
-    temperature = get_temperature();
+    // tempTrack = get_temperature();  // sensor broke / DEBUG
+    temperature = get_temperature();               // temperature = get_temperature();
+    // DUMP(tempTrack);                // sensor broke / DEBUG
     DUMP(temperature);
     BREAK();
 
