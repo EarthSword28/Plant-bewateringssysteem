@@ -27,6 +27,7 @@ unsigned long resistanceHumidityValue = 0;
 unsigned long capacitanceHumidityValue = 0;
 
 unsigned long wateringTimeInterval = 0;
+boolean waterStatus;
 boolean pumpSwitch;
 
 unsigned short resistanceHumidityCategory = 0;
@@ -110,16 +111,20 @@ int read_sensors_and_give_water_if_neccesary(byte humidityCategory, int temp) {
   TRACE();
   if (humidityCategory == HUMIDITY_DRY) {
     if (temp > MAX_TEMPERATURE) {
+      waterStatus = HIGH;
       return WATERING_TIME_INTERVAL_LONG;
     }
     else if (temp > MIN_TEMPERATURE) {
+      waterStatus = HIGH;
       return WATERING_TIME_INTERVAL_SHORT;
     }
     else {
+      waterStatus = LOW;
       return WATERING_TIME_INTERVAL_INACTIVE;
     }
   }
   else {
+    waterStatus = LOW;
     return WATERING_TIME_INTERVAL_INACTIVE;
   }
 }
@@ -136,6 +141,7 @@ void stop_watering() {
   TRACE();
   timer = millis();
   wateringTimer = millis();
+  waterStatus = LOW;
   pumpSwitch = LOW;
   wateringTimeInterval = WATERING_TIME_INTERVAL_INACTIVE;
   digitalWrite(RELAY_MODULE, LOW);
@@ -150,6 +156,7 @@ void setup() {
   capacitanceHumidityValue = 0;
   digitalWrite(RELAY_MODULE, LOW);
 
+  waterStatus = LOW;
   pumpSwitch = LOW;
   wateringTimeInterval = 0;
 
@@ -162,7 +169,7 @@ void setup() {
 }
 
 void loop() {
-  if (wateringTimeInterval != 0) {
+  if (waterStatus == HIGH) {
     TRACE();
     DUMP(pumpSwitch);
     DUMP(RELAY_MODULE);
