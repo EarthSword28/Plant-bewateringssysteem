@@ -49,10 +49,10 @@ float get_temperature() {
 
 int get_resistance_category(int sensorValue) {
   TRACE();
-  if (sensorValue >= RESISTANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_DRY_INTERVAL_MAX) {
+  if (sensorValue >= RESISTANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue < RESISTANCE_SENSOR_DRY_INTERVAL_MAX) {
     return HUMIDITY_DRY;
   }
-  else if (sensorValue >= RESISTANCE_SENSOR_WET_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_WET_INTERVAL_MAX) {
+  else if (sensorValue >= RESISTANCE_SENSOR_WET_INTERVAL_MIN && sensorValue < RESISTANCE_SENSOR_WET_INTERVAL_MAX) {
     return HUMIDITY_WET;
   }
   else if (sensorValue >= RESISTANCE_SENSOR_WATER_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_WATER_INTERVAL_MAX) {
@@ -65,10 +65,10 @@ int get_resistance_category(int sensorValue) {
 
 int get_capacitance_category(int sensorValue) {
   TRACE();
-  if (sensorValue >= CAPACITANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue <= CAPACITANCE_SENSOR_DRY_INTERVAL_MAX) {
+  if (sensorValue >= CAPACITANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue < CAPACITANCE_SENSOR_DRY_INTERVAL_MAX) {
     return HUMIDITY_DRY;
   }
-  else if (sensorValue >= CAPACITANCE_SENSOR_WET_INTERVAL_MIN && sensorValue <= CAPACITANCE_SENSOR_WET_INTERVAL_MAX) {
+  else if (sensorValue >= CAPACITANCE_SENSOR_WET_INTERVAL_MIN && sensorValue < CAPACITANCE_SENSOR_WET_INTERVAL_MAX) {
     return HUMIDITY_WET;
   }
   else if (sensorValue >= CAPACITANCE_SENSOR_WATER_INTERVAL_MIN && sensorValue <= CAPACITANCE_SENSOR_WATER_INTERVAL_MAX) {
