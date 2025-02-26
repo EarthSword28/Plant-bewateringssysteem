@@ -1,5 +1,3 @@
-#include <WString.h>
-#include <esp32-hal-gpio.h>
 // DONE: Wachttijd tussen 2 opeenvolgende inlezingen van sensoren
 const int TIJD_INTERVAL_SENSOREN = 5000;
 const int PANIC_BUTTON_DEBOUNCE = 500;

@@ -4,7 +4,7 @@
 
 #include <config.h>
 
-#define ARDUINOTRACE_ENABLE TRACE_SWITCH  // Enable(1)/Disable(0) all traces
+#define ARDUINOTRACE_ENABLE 1  // Enable(1)/Disable(0) all traces
 #include <ArduinoTrace.h>
 
 #define RESISTIEVE_BODEMVOCHTIGHEIDS_SENSOR 36
