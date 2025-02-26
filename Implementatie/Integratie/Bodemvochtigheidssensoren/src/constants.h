@@ -30,11 +30,13 @@ const short HUMIDITY_WATER = 3;
 
 // Timers
 const int TIME_INTERVAL_SENSORS = 5000;
+const int PANIC_BUTTON_DEBOUNCE = 500;
 
   // watering timers
 const int WATERING_TIME_INTERVAL_INACTIVE = 0;
 const int WATERING_TIME_INTERVAL_SHORT = 1000;
 const int WATERING_TIME_INTERVAL_LONG = 2000;
+const int WATERING_TIME_INTERVAL_PANIC_BUTTON = 5000;
 
 // Temperature intervals
 const int MIN_TEMPERATURE = 5;

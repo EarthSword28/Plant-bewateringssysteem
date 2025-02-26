@@ -12,6 +12,8 @@
 
 #define ONE_WIRE_BUS 12                   // temperature sensor
 
+#define PANIC_BUTTON 4
+
 #define RELAY_MODULE 17                   // the relay for the pump
  
 // Setup a oneWire instance to communicate with any OneWire device
@@ -29,6 +31,7 @@ unsigned long wateringTimeInterval = 0;
 
 boolean waterStatus;
 boolean pumpSwitch;
+boolean panicButtonSwitch;
 
 unsigned short resistanceHumidityCategory = 0;
 unsigned short capacitanceHumidityCategory = 0;
@@ -36,6 +39,7 @@ unsigned short finalHumidityCategory = 0;
 
 unsigned long timer = 0;
 unsigned long wateringTimer = 0;
+unsigned long panicButtonDebounceTimer = 0;
 
 float get_temperature() {
   TRACE();
@@ -148,6 +152,13 @@ void stop_watering() {
   DUMP(wateringTimer);
 }
 
+void panic_button() {
+  panicButtonSwitch = HIGH;
+  panicButtonDebounceTimer = millis();
+  waterStatus = HIGH;
+  wateringTimeInterval = WATERING_TIME_INTERVAL_PANIC_BUTTON;
+}
+
 int get_MOCK_value(boolean randomSwitch, int value, int randomValue1, int randomValue2) {
   if (randomSwitch == LOW) {
     return value;
@@ -160,6 +171,8 @@ int get_MOCK_value(boolean randomSwitch, int value, int randomValue1, int random
 void setup() {
   pinMode(RESISTANCE_HUMIDITY_SENSOR, INPUT);
   pinMode(CAPACITANCE_HUMIDITY_SENSOR, INPUT);
+  pinMode(ONE_WIRE_BUS, INPUT);
+  pinMode(PANIC_BUTTON, INPUT);
   pinMode(RELAY_MODULE, OUTPUT);
   resistanceHumidityValue = 0;
   capacitanceHumidityValue = 0;
@@ -167,17 +180,25 @@ void setup() {
 
   waterStatus = LOW;
   pumpSwitch = LOW;
+  panicButtonSwitch = LOW;
   wateringTimeInterval = 0;
 
   Serial.begin(9600);
   timer = millis();
   wateringTimer = millis();
+  panicButtonDebounceTimer = millis();
   
   // Start up the sensor library
   sensors.begin(); 
 }
 
 void loop() {
+  if (pumpSwitch == LOW && panicButtonSwitch == LOW && digitalRead(PANIC_BUTTON) == HIGH) {
+    panic_button();
+  }
+  else if (panicButtonSwitch == HIGH && millis() - panicButtonDebounceTimer >= PANIC_BUTTON_DEBOUNCE) {
+    panicButtonSwitch = LOW;
+  }
   if (waterStatus == HIGH) {
     TRACE();
     DUMP(pumpSwitch);
