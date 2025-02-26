@@ -12,7 +12,7 @@
 
 #define ONE_WIRE_BUS 12                   // temperatuur sensor
 
-#define PANIC_BUTTON 4
+#define PANIC_BUTTON 27                   // gebruik de ingebouwde knop als de panic button
 
 #define RELAY_MODULE 17                   // de relay voor de pomp
  
@@ -30,7 +30,7 @@ unsigned long capacitieveBodemvochtigheidsWaarde = 0;
 unsigned long waterGevenTijdsInterval = 0;
 
 boolean pompSchakelaar;
-boolean panicButtonSwitch;
+boolean panicButtonSchakelaar;
 
 String waterStatus;
 
@@ -42,7 +42,7 @@ unsigned long timer = 0;
 unsigned long waterTimer = 0;
 unsigned long panicButtonDebounceTimer = 0;
 
-float get_temperature() {
+float lees_temperatuur() {
   TRACE();
   // Send the command to get temperatures
   sensors.requestTemperatures(); 
@@ -51,7 +51,7 @@ float get_temperature() {
   return sensors.getTempCByIndex(0);
 }
 
-String get_resistance_category(int sensorWaarde) {
+String lees_resistieve_bodemvochtigheids_categorie(int sensorWaarde) {
   TRACE();
   if (sensorWaarde >= RESISTIEVE_SENSOR_DROOG_INTERVAL_MIN && sensorWaarde < RESISTIEVE_SENSOR_DROOG_INTERVAL_MAX) {
     return VOCHTIGHEID_DROOG;
@@ -67,7 +67,7 @@ String get_resistance_category(int sensorWaarde) {
   }
 }
 
-String get_capacitance_category(int sensorWaarde) {
+String lees_capacitieve_bodemvochtigheids_categorie(int sensorWaarde) {
   TRACE();
   if (sensorWaarde >= CAPACITIEVE_SENSOR_DROOG_INTERVAL_MIN && sensorWaarde < CAPACITIEVE_SENSOR_DROOG_INTERVAL_MAX) {
     return VOCHTIGHEID_DROOG;
@@ -83,7 +83,7 @@ String get_capacitance_category(int sensorWaarde) {
   }
 }
 
-String get_final_category(String resistieveCategorie, String capacitieveCategorie) {
+String bereken_finale_bodemvochtigheids_categorie(String resistieveCategorie, String capacitieveCategorie) {
   TRACE();
   if (capacitieveCategorie == VOCHTIGHEID_DROOG) {
     return VOCHTIGHEID_DROOG;
@@ -112,9 +112,9 @@ String get_final_category(String resistieveCategorie, String capacitieveCategori
   }
 }
 
-int read_sensors_and_give_water_if_neccesary(String humidityCategory, float temp) {
+int lees_sensoren_en_geef_water_indien_nodig(String categorie, float temp) {
   TRACE();
-  if (humidityCategory == VOCHTIGHEID_DROOG) {
+  if (categorie == VOCHTIGHEID_DROOG) {
     if (temp > MAX_TEMPERATUUR) {
       waterStatus = WATER_GEVEN;
       return WATER_GEVEN_INTERVAL_LANG;
@@ -134,7 +134,7 @@ int read_sensors_and_give_water_if_neccesary(String humidityCategory, float temp
   }
 }
 
-void start_watering() {
+void zet_waterpomp_aan() {
   TRACE();
   waterTimer = millis();
   pompSchakelaar = HIGH;
@@ -142,7 +142,7 @@ void start_watering() {
   DUMP(waterTimer);
 }
 
-void stop_watering() {
+void zet_waterpomp_uit() {
   TRACE();
   timer = millis();
   waterTimer = millis();
@@ -154,18 +154,18 @@ void stop_watering() {
 }
 
 void panic_button() {
-  panicButtonSwitch = HIGH;
+  panicButtonSchakelaar = HIGH;
   panicButtonDebounceTimer = millis();
   waterStatus = HIGH;
   waterGevenTijdsInterval = WATER_GEVEN_INTERVAL_PANIC_BUTTON;
 }
 
-int get_MOCK_value(boolean randomSwitch, int value, int randomValue1, int randomValue2) {
-  if (randomSwitch == LOW) {
-    return value;
+int get_MOCK_value(boolean randomSchakelaar, int waarde, int randomWaarde1, int randomWaarde2) {
+  if (randomSchakelaar == LOW) {
+    return waarde;
   }
   else {
-    return random(randomValue1, randomValue2);
+    return random(randomWaarde1, randomWaarde2);
   }
 }
 
@@ -181,7 +181,7 @@ void setup() {
 
   waterStatus = GEEN_WATER_GEVEN;
   pompSchakelaar = LOW;
-  panicButtonSwitch = LOW;
+  panicButtonSchakelaar = LOW;
   waterGevenTijdsInterval = 0;
 
   Serial.begin(9600);
@@ -194,21 +194,21 @@ void setup() {
 }
 
 void loop() {
-  if (pompSchakelaar == LOW && panicButtonSwitch == LOW && digitalRead(PANIC_BUTTON) == HIGH) {
+  if (pompSchakelaar == LOW && panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == HIGH) {
     panic_button();
   }
-  else if (panicButtonSwitch == HIGH && millis() - panicButtonDebounceTimer >= PANIC_BUTTON_DEBOUNCE) {
-    panicButtonSwitch = LOW;
+  else if (panicButtonSchakelaar == HIGH && millis() - panicButtonDebounceTimer >= PANIC_BUTTON_DEBOUNCE) {
+    panicButtonSchakelaar = LOW;
   }
   if (waterStatus == WATER_GEVEN) {
     TRACE();
     DUMP(pompSchakelaar);
     DUMP(RELAY_MODULE);
     if (pompSchakelaar == LOW) {
-      start_watering();
+      zet_waterpomp_aan();
     }
     else if (millis() - waterTimer >= waterGevenTijdsInterval) {
-      stop_watering();
+      zet_waterpomp_uit();
     }
     DUMP(pompSchakelaar);
     DUMP(RELAY_MODULE);
@@ -232,16 +232,16 @@ void loop() {
     DUMP(capacitieveBodemvochtigheidsWaarde);
     BREAK();
 
-    resistieveBodemvochtigheidsCategorie = get_resistance_category(resistieveBodemvochtigheidsWaarde);                        // resistieveBodemvochtigheidsCategorie = get_resistance_category(resistieveBodemvochtigheidsWaarde);
-    capacitieveBodemvochtigheidsCategorie = get_capacitance_category(capacitieveBodemvochtigheidsWaarde);                     // capacitieveBodemvochtigheidsCategorie = get_capacitance_category(capacitieveBodemvochtigheidsWaarde);
-    finaleBodemvochtigheidsCategorie = get_final_category(resistieveBodemvochtigheidsCategorie, capacitieveBodemvochtigheidsCategorie);
+    resistieveBodemvochtigheidsCategorie = lees_resistieve_bodemvochtigheids_categorie(resistieveBodemvochtigheidsWaarde);                        // resistieveBodemvochtigheidsCategorie = lees_resistieve_bodemvochtigheids_categorie(resistieveBodemvochtigheidsWaarde);
+    capacitieveBodemvochtigheidsCategorie = lees_capacitieve_bodemvochtigheids_categorie(capacitieveBodemvochtigheidsWaarde);                     // capacitieveBodemvochtigheidsCategorie = lees_capacitieve_bodemvochtigheids_categorie(capacitieveBodemvochtigheidsWaarde);
+    finaleBodemvochtigheidsCategorie = bereken_finale_bodemvochtigheids_categorie(resistieveBodemvochtigheidsCategorie, capacitieveBodemvochtigheidsCategorie);
     DUMP(resistieveBodemvochtigheidsCategorie);
     DUMP(capacitieveBodemvochtigheidsCategorie);
     DUMP(finaleBodemvochtigheidsCategorie);
     BREAK();
 
     if (MOCK_SWITCH == LOW) {
-      temperatuur = get_temperature();               // temperatuur = get_temperature();
+      temperatuur = lees_temperatuur();               // temperatuur = lees_temperatuur();
     }
     else {
       temperatuur = get_MOCK_value(TEMPERATURE_SENSOR_MOCK_RANDOM, TEMPERATURE_SENSOR_MOCK_VALUE, TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_1, TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_2);
@@ -249,7 +249,7 @@ void loop() {
     DUMP(temperatuur);
     BREAK();
 
-    waterGevenTijdsInterval = read_sensors_and_give_water_if_neccesary(finaleBodemvochtigheidsCategorie, temperatuur);
+    waterGevenTijdsInterval = lees_sensoren_en_geef_water_indien_nodig(finaleBodemvochtigheidsCategorie, temperatuur);
     DUMP(waterGevenTijdsInterval);
 
     BREAK();
