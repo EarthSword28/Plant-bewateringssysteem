@@ -50,22 +50,22 @@ const int CAPACITIEVE_SENSOR_NAT_INTERVAL_MAX = 2463;
 
 
 // DEBUG
-const int TRACE_SWITCH = 1;  // Enable(1)/Disable(0) all traces
+const int TRACE_SCHAKELAAR = 1;  // Enable(1)/Disable(0) all traces
 
   // MOCK
-const bool MOCK_SWITCH = LOW;   // Enable(HIGH)/Disable(LOW) all mock values
+const bool MOCK_SCHAKELAAR = LOW;   // Enable(HIGH)/Disable(LOW) all mock values
 
-const bool CAPACITANCE_SENSOR_MOCK_RANDOM = LOW;  // Enable(HIGH)/Disable(LOW) all random mock values
-const int CAPACITANCE_SENSOR_MOCK_VALUE = 0;
-const int CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_1 = 0;
-const int CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_2 = 0;
+const bool CAPACITIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR = LOW;  // Enable(HIGH)/Disable(LOW) all random mock values
+const int CAPACITIEVE_SENSOR_MOCK_WAARDE = 0;
+const int CAPACITIEVE_SENSOR_MOCK_RANDOM_WAARDE_1 = 0;
+const int CAPACITIEVE_SENSOR_MOCK_RANDOM_WAARDE_2 = 0;
 
-const bool RESISTANCEE_SENSOR_MOCK_RANDOM = LOW;  // Enable(HIGH)/Disable(LOW) all random mock values
-const int RESISTANCE_SENSOR_MOCK_VALUE = 0;
-const int RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_1 = 0;
-const int RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_2 = 0;
+const bool RESISTIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR = LOW;  // Enable(HIGH)/Disable(LOW) all random mock values
+const int RESISTIEVE_SENSOR_MOCK_WAARDE = 0;
+const int RESISTIEVE_SENSOR_MOCK_RANDOM_WAARDE_1 = 0;
+const int RESISTIEVE_SENSOR_MOCK_RANDOM_WAARDE_2 = 0;
 
-const bool TEMPERATURE_SENSOR_MOCK_RANDOM = LOW;  // Enable(HIGH)/Disable(LOW) all random mock values
-const int TEMPERATURE_SENSOR_MOCK_VALUE = 0;
-const int TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_1 = 0;
-const int TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_2 = 0;
+const bool TEMPERATUUR_SENSOR_MOCK_RANDOM_SCHAKELAAR = LOW;  // Enable(HIGH)/Disable(LOW) all random mock values
+const int TEMPERATUUR_SENSOR_MOCK_WAARDE = 0;
+const int TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_1 = 0;
+const int TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_2 = 0;

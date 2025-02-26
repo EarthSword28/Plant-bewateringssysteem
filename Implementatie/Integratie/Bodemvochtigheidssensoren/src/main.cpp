@@ -4,7 +4,7 @@
 
 #include <config.h>
 
-#define ARDUINOTRACE_ENABLE 1  // Enable(1)/Disable(0) all traces
+#define ARDUINOTRACE_ENABLE TRACE_SCHAKELAAR  // Enable(1)/Disable(0) all traces
 #include <ArduinoTrace.h>
 
 #define RESISTIEVE_BODEMVOCHTIGHEIDS_SENSOR 36
@@ -220,13 +220,13 @@ void loop() {
     DUMP(timer);
     BREAK();
 
-    if (MOCK_SWITCH == LOW) {
+    if (MOCK_SCHAKELAAR == LOW) {
       resistieveBodemvochtigheidsWaarde = analogRead(RESISTIEVE_BODEMVOCHTIGHEIDS_SENSOR);
       capacitieveBodemvochtigheidsWaarde = analogRead(CAPACITIEVE_BODEMVOCHTIGHEIDS_SENSOR);
     }
     else {
-      resistieveBodemvochtigheidsWaarde = get_MOCK_value(RESISTANCEE_SENSOR_MOCK_RANDOM, RESISTANCE_SENSOR_MOCK_VALUE, RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_1, RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_2);
-      capacitieveBodemvochtigheidsWaarde = get_MOCK_value(CAPACITANCE_SENSOR_MOCK_RANDOM, CAPACITANCE_SENSOR_MOCK_VALUE, CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_1, CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_2);
+      resistieveBodemvochtigheidsWaarde = get_MOCK_value(RESISTIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR, RESISTIEVE_SENSOR_MOCK_WAARDE, RESISTIEVE_SENSOR_MOCK_RANDOM_WAARDE_2, RESISTIEVE_SENSOR_MOCK_RANDOM_WAARDE_2);
+      capacitieveBodemvochtigheidsWaarde = get_MOCK_value(CAPACITIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR, CAPACITIEVE_SENSOR_MOCK_WAARDE, CAPACITIEVE_SENSOR_MOCK_RANDOM_WAARDE_1, CAPACITIEVE_SENSOR_MOCK_RANDOM_WAARDE_2);
     }
     DUMP(resistieveBodemvochtigheidsWaarde);
     DUMP(capacitieveBodemvochtigheidsWaarde);
@@ -240,11 +240,11 @@ void loop() {
     DUMP(finaleBodemvochtigheidsCategorie);
     BREAK();
 
-    if (MOCK_SWITCH == LOW) {
+    if (MOCK_SCHAKELAAR == LOW) {
       temperatuur = lees_temperatuur();               // temperatuur = lees_temperatuur();
     }
     else {
-      temperatuur = get_MOCK_value(TEMPERATURE_SENSOR_MOCK_RANDOM, TEMPERATURE_SENSOR_MOCK_VALUE, TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_1, TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_2);
+      temperatuur = get_MOCK_value(TEMPERATUUR_SENSOR_MOCK_RANDOM_SCHAKELAAR, TEMPERATUUR_SENSOR_MOCK_WAARDE, TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_1, TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_2);
     }
     DUMP(temperatuur);
     BREAK();
