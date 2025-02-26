@@ -4,7 +4,7 @@
 
 #include <constants.h>
 
-#define ARDUINOTRACE_ENABLE 1  // Disable(0)/Enable(1) all traces
+#define ARDUINOTRACE_ENABLE 1  // Enable(1)/Disable(0) all traces
 #include <ArduinoTrace.h>
 
 #define RESISTANCE_HUMIDITY_SENSOR 36
@@ -27,6 +27,7 @@ unsigned long resistanceHumidityValue = 0;
 unsigned long capacitanceHumidityValue = 0;
 
 unsigned long wateringTimeInterval = 0;
+
 boolean waterStatus;
 boolean pumpSwitch;
 
