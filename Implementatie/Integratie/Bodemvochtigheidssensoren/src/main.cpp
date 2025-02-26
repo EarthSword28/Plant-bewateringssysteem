@@ -4,7 +4,7 @@
 
 #include <constants.h>
 
-#define ARDUINOTRACE_ENABLE 1  // Enable(1)/Disable(0) all traces
+#define ARDUINOTRACE_ENABLE TRACE_SWITCH  // Enable(1)/Disable(0) all traces
 #include <ArduinoTrace.h>
 
 #define RESISTANCE_HUMIDITY_SENSOR 36
@@ -20,7 +20,6 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass oneWire reference to DallasTemperature library
 DallasTemperature sensors(&oneWire);
 
-// float tempTrack = 0;    // sensor broke / DEBUG
 float temperature = 0;
 
 unsigned long resistanceHumidityValue = 0;
@@ -149,6 +148,15 @@ void stop_watering() {
   DUMP(wateringTimer);
 }
 
+int get_MOCK_value(boolean randomSwitch, int value, int randomValue1, int randomValue2) {
+  if (randomSwitch == LOW) {
+    return value;
+  }
+  else {
+    return random(randomValue1, randomValue2);
+  }
+}
+
 void setup() {
   pinMode(RESISTANCE_HUMIDITY_SENSOR, INPUT);
   pinMode(CAPACITANCE_HUMIDITY_SENSOR, INPUT);
@@ -190,8 +198,14 @@ void loop() {
     DUMP(timer);
     BREAK();
 
-    resistanceHumidityValue = analogRead(RESISTANCE_HUMIDITY_SENSOR);
-    capacitanceHumidityValue = analogRead(CAPACITANCE_HUMIDITY_SENSOR);
+    if (MOCK_SWITCH == LOW) {
+      resistanceHumidityValue = analogRead(RESISTANCE_HUMIDITY_SENSOR);
+      capacitanceHumidityValue = analogRead(CAPACITANCE_HUMIDITY_SENSOR);
+    }
+    else {
+      resistanceHumidityValue = get_MOCK_value(RESISTANCEE_SENSOR_MOCK_RANDOM, RESISTANCE_SENSOR_MOCK_VALUE, RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_1, RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_2);
+      capacitanceHumidityValue = get_MOCK_value(CAPACITANCE_SENSOR_MOCK_RANDOM, CAPACITANCE_SENSOR_MOCK_VALUE, CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_1, CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_2);
+    }
     DUMP(resistanceHumidityValue);
     DUMP(capacitanceHumidityValue);
     BREAK();
@@ -204,9 +218,12 @@ void loop() {
     DUMP(finalHumidityCategory);
     BREAK();
 
-    // tempTrack = get_temperature();  // sensor broke / DEBUG
-    temperature = get_temperature();               // temperature = get_temperature();
-    // DUMP(tempTrack);                // sensor broke / DEBUG
+    if (MOCK_SWITCH == LOW) {
+      temperature = get_temperature();               // temperature = get_temperature();
+    }
+    else {
+      temperature = get_MOCK_value(TEMPERATURE_SENSOR_MOCK_RANDOM, TEMPERATURE_SENSOR_MOCK_VALUE, TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_1, TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_2);
+    }
     DUMP(temperature);
     BREAK();
 

@@ -39,3 +39,24 @@ const int WATERING_TIME_INTERVAL_LONG = 2000;
 // Temperature intervals
 const int MIN_TEMPERATURE = 5;
 const int MAX_TEMPERATURE = 25;
+
+// DEBUG
+const int TRACE_SWITCH = 1;  // Enable(1)/Disable(0) all traces
+
+  // MOCK
+const bool MOCK_SWITCH = LOW;   // Enable(HIGH)/Disable(LOW) all mock values
+
+const bool CAPACITANCE_SENSOR_MOCK_RANDOM = LOW;  // Enable(HIGH)/Disable(LOW) all random mock values
+const int CAPACITANCE_SENSOR_MOCK_VALUE = 0;
+const int CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_1 = 0;
+const int CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_2 = 0;
+
+const bool RESISTANCEE_SENSOR_MOCK_RANDOM = LOW;  // Enable(HIGH)/Disable(LOW) all random mock values
+const int RESISTANCE_SENSOR_MOCK_VALUE = 0;
+const int RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_1 = 0;
+const int RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_2 = 0;
+
+const bool TEMPERATURE_SENSOR_MOCK_RANDOM = LOW;  // Enable(HIGH)/Disable(LOW) all random mock values
+const int TEMPERATURE_SENSOR_MOCK_VALUE = 0;
+const int TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_1 = 0;
+const int TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_2 = 0;
