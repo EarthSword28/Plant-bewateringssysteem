@@ -1,3 +1,5 @@
+#include <WString.h>
+#include <esp32-hal-gpio.h>
 // DONE: Wachttijd tussen 2 opeenvolgende inlezingen van sensoren
 const int TIME_INTERVAL_SENSORS = 5000;
 const int PANIC_BUTTON_DEBOUNCE = 500;
@@ -53,19 +55,19 @@ const int CAPACITANCE_SENSOR_WATER_INTERVAL_MAX = 2463;
 const int TRACE_SWITCH = 1;  // Enable(1)/Disable(0) all traces
 
   // MOCK
-const bool MOCK_SWITCH = 0;   // Enable(HIGH)/Disable(LOW) all mock values
+const bool MOCK_SWITCH = LOW;   // Enable(HIGH)/Disable(LOW) all mock values
 
-const bool CAPACITANCE_SENSOR_MOCK_RANDOM = 0;  // Enable(HIGH)/Disable(LOW) all random mock values
+const bool CAPACITANCE_SENSOR_MOCK_RANDOM = LOW;  // Enable(HIGH)/Disable(LOW) all random mock values
 const int CAPACITANCE_SENSOR_MOCK_VALUE = 0;
 const int CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_1 = 0;
 const int CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_2 = 0;
 
-const bool RESISTANCEE_SENSOR_MOCK_RANDOM = 0;  // Enable(HIGH)/Disable(LOW) all random mock values
+const bool RESISTANCEE_SENSOR_MOCK_RANDOM = LOW;  // Enable(HIGH)/Disable(LOW) all random mock values
 const int RESISTANCE_SENSOR_MOCK_VALUE = 0;
 const int RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_1 = 0;
 const int RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_2 = 0;
 
-const bool TEMPERATURE_SENSOR_MOCK_RANDOM = 0;  // Enable(HIGH)/Disable(LOW) all random mock values
+const bool TEMPERATURE_SENSOR_MOCK_RANDOM = LOW;  // Enable(HIGH)/Disable(LOW) all random mock values
 const int TEMPERATURE_SENSOR_MOCK_VALUE = 0;
 const int TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_1 = 0;
 const int TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_2 = 0;
