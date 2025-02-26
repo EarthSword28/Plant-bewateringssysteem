@@ -2,7 +2,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-#include <constants.h>
+#include <config.h>
 
 #define ARDUINOTRACE_ENABLE TRACE_SWITCH  // Enable(1)/Disable(0) all traces
 #include <ArduinoTrace.h>
@@ -29,13 +29,14 @@ unsigned long capacitanceHumidityValue = 0;
 
 unsigned long wateringTimeInterval = 0;
 
-boolean waterStatus;
 boolean pumpSwitch;
 boolean panicButtonSwitch;
 
-unsigned short resistanceHumidityCategory = 0;
-unsigned short capacitanceHumidityCategory = 0;
-unsigned short finalHumidityCategory = 0;
+String waterStatus;
+
+String resistanceHumidityCategory = "";
+String capacitanceHumidityCategory = "";
+String finalHumidityCategory = "";
 
 unsigned long timer = 0;
 unsigned long wateringTimer = 0;
@@ -50,7 +51,7 @@ float get_temperature() {
   return sensors.getTempCByIndex(0);
 }
 
-int get_resistance_category(int sensorValue) {
+String get_resistance_category(int sensorValue) {
   TRACE();
   if (sensorValue >= RESISTANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue < RESISTANCE_SENSOR_DRY_INTERVAL_MAX) {
     return HUMIDITY_DRY;
@@ -66,7 +67,7 @@ int get_resistance_category(int sensorValue) {
   }
 }
 
-int get_capacitance_category(int sensorValue) {
+String get_capacitance_category(int sensorValue) {
   TRACE();
   if (sensorValue >= CAPACITANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue < CAPACITANCE_SENSOR_DRY_INTERVAL_MAX) {
     return HUMIDITY_DRY;
@@ -82,7 +83,7 @@ int get_capacitance_category(int sensorValue) {
   }
 }
 
-int get_final_category(int resistanceCategory, int capacitanceCategory) {
+String get_final_category(String resistanceCategory, String capacitanceCategory) {
   TRACE();
   if (capacitanceCategory == HUMIDITY_DRY) {
     return HUMIDITY_DRY;
@@ -111,24 +112,24 @@ int get_final_category(int resistanceCategory, int capacitanceCategory) {
   }
 }
 
-int read_sensors_and_give_water_if_neccesary(byte humidityCategory, int temp) {
+int read_sensors_and_give_water_if_neccesary(String humidityCategory, float temp) {
   TRACE();
   if (humidityCategory == HUMIDITY_DRY) {
     if (temp > MAX_TEMPERATURE) {
-      waterStatus = HIGH;
+      waterStatus = WATER_GEVEN;
       return WATERING_TIME_INTERVAL_LONG;
     }
     else if (temp > MIN_TEMPERATURE) {
-      waterStatus = HIGH;
+      waterStatus = WATER_GEVEN;
       return WATERING_TIME_INTERVAL_SHORT;
     }
     else {
-      waterStatus = LOW;
+      waterStatus = GEEN_WATER_GEVEN;
       return WATERING_TIME_INTERVAL_INACTIVE;
     }
   }
   else {
-    waterStatus = LOW;
+    waterStatus = GEEN_WATER_GEVEN;
     return WATERING_TIME_INTERVAL_INACTIVE;
   }
 }
@@ -145,7 +146,7 @@ void stop_watering() {
   TRACE();
   timer = millis();
   wateringTimer = millis();
-  waterStatus = LOW;
+  waterStatus = GEEN_WATER_GEVEN;
   pumpSwitch = LOW;
   wateringTimeInterval = WATERING_TIME_INTERVAL_INACTIVE;
   digitalWrite(RELAY_MODULE, LOW);
@@ -178,7 +179,7 @@ void setup() {
   capacitanceHumidityValue = 0;
   digitalWrite(RELAY_MODULE, LOW);
 
-  waterStatus = LOW;
+  waterStatus = GEEN_WATER_GEVEN;
   pumpSwitch = LOW;
   panicButtonSwitch = LOW;
   wateringTimeInterval = 0;
@@ -199,7 +200,7 @@ void loop() {
   else if (panicButtonSwitch == HIGH && millis() - panicButtonDebounceTimer >= PANIC_BUTTON_DEBOUNCE) {
     panicButtonSwitch = LOW;
   }
-  if (waterStatus == HIGH) {
+  if (waterStatus == WATER_GEVEN) {
     TRACE();
     DUMP(pumpSwitch);
     DUMP(RELAY_MODULE);

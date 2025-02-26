@@ -1,3 +1,4 @@
+#include <esp32-hal-gpio.h>
 // Minimum- en maximumvalue of the resistance humidity sensor to recieve the interpretation "DRY"
 const int RESISTANCE_SENSOR_DRY_INTERVAL_MIN = 0;
 const int RESISTANCE_SENSOR_DRY_INTERVAL_MAX = 2060;

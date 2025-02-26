@@ -7,14 +7,14 @@ const int MIN_TEMPERATURE = 5;
 const int MAX_TEMPERATURE = 25;
 
 // DONE: Categoriën vochtigheid
-const char HUMIDITY_NO_VALUE[12] = "GEEN METING";
-const char HUMIDITY_DRY[12] = "DROOG";
-const char HUMIDITY_WET[12] = "VOCHTIG";
-const char HUMIDITY_WATER[12] = "NAT";
+const String HUMIDITY_NO_VALUE = "GEEN METING";
+const String HUMIDITY_DRY = "DROOG";
+const String HUMIDITY_WET = "VOCHTIG";
+const String HUMIDITY_WATER = "NAT";
 
 // DONE: Statussen water geven (geen water, wél water)
-const char GEEN_WATER[11] = "GEEN WATER";
-const char WEL_WATER[11] = "WEL WATER";
+const String GEEN_WATER_GEVEN = "GEEN WATER GEVEN";
+const String WATER_GEVEN = "WATER GEVEN";
 
 // DONE: Duurtijden water geven (in milliseconden)
 const int WATERING_TIME_INTERVAL_INACTIVE = 0;
