@@ -1,54 +1,54 @@
 #include <WString.h>
 #include <esp32-hal-gpio.h>
 // DONE: Wachttijd tussen 2 opeenvolgende inlezingen van sensoren
-const int TIME_INTERVAL_SENSORS = 5000;
+const int TIJD_INTERVAL_SENSOREN = 5000;
 const int PANIC_BUTTON_DEBOUNCE = 500;
 
 // DONE: Temperatuur schakelwaarden
-const int MIN_TEMPERATURE = 5;
-const int MAX_TEMPERATURE = 25;
+const int MIN_TEMPERATUUR = 5;
+const int MAX_TEMPERATUUR = 25;
 
 // DONE: Categoriën vochtigheid
-const String HUMIDITY_NO_VALUE = "GEEN METING";
-const String HUMIDITY_DRY = "DROOG";
-const String HUMIDITY_WET = "VOCHTIG";
-const String HUMIDITY_WATER = "NAT";
+const String VOCHTIGHEID_GEEN_METING = "GEEN METING";
+const String VOCHTIGHEID_DROOG = "DROOG";
+const String VOCHTIGHEID_VOCHTIG = "VOCHTIG";
+const String VOCHTIGHEID_NAT = "NAT";
 
 // DONE: Statussen water geven (geen water, wél water)
 const String GEEN_WATER_GEVEN = "GEEN WATER GEVEN";
 const String WATER_GEVEN = "WATER GEVEN";
 
 // DONE: Duurtijden water geven (in milliseconden)
-const int WATERING_TIME_INTERVAL_INACTIVE = 0;
-const int WATERING_TIME_INTERVAL_SHORT = 1000;
-const int WATERING_TIME_INTERVAL_LONG = 2000;
-const int WATERING_TIME_INTERVAL_PANIC_BUTTON = 5000;
+const int WATER_GEVEN_INTERVAL_INACTIEF = 0;
+const int WATER_GEVEN_INTERVAL_KORT = 1000;
+const int WATER_GEVEN_INTERVAL_LANG = 2000;
+const int WATER_GEVEN_INTERVAL_PANIC_BUTTON = 5000;
 
 // Intervallen voor BVH waarden
 // Opgelet, we definiëren de intervallen als gesloten: [min, max]
 // Minimum- en maximumwaarde voor de resistieve vochtigheidssensor om de interpretatie "DROOG" te krijgen
-const int RESISTANCE_SENSOR_DRY_INTERVAL_MIN = 0;
-const int RESISTANCE_SENSOR_DRY_INTERVAL_MAX = 2060;
+const int RESISTIEVE_SENSOR_DROOG_INTERVAL_MIN = 0;
+const int RESISTIEVE_SENSOR_DROOG_INTERVAL_MAX = 2060;
 
 // Minimum- en maximumwaarde voor de resistieve vochtigheidssensor om de interpretatie "VOCHTIG" te krijgen
-const int RESISTANCE_SENSOR_WET_INTERVAL_MIN = 2061;
-const int RESISTANCE_SENSOR_WET_INTERVAL_MAX = 2546;
+const int RESISTIEVE_SENSOR_VOCHTIG_INTERVAL_MIN = 2061;
+const int RESISTIEVE_SENSOR_VOCHTIG_INTERVAL_MAX = 2546;
 
 // Minimum- en maximumwaarde voor de resistieve vochtigheidssensor om de interpretatie "NAT" te krijgen
-const int RESISTANCE_SENSOR_WATER_INTERVAL_MIN = 2547;
-const int RESISTANCE_SENSOR_WATER_INTERVAL_MAX = 4095;
+const int RESISTIEVE_SENSOR_NAT_INTERVAL_MIN = 2547;
+const int RESISTIEVE_SENSOR_NAT_INTERVAL_MAX = 4095;
 
 // Minimum- en maximumwaarde voor de capacitieve vochtigheidssensor om de interpretatie "DROOG" te krijgen
-const int CAPACITANCE_SENSOR_DRY_INTERVAL_MIN = 2872;
-const int CAPACITANCE_SENSOR_DRY_INTERVAL_MAX = 4095;
+const int CAPACITIEVE_SENSOR_DROOG_INTERVAL_MIN = 2872;
+const int CAPACITIEVE_SENSOR_DROOG_INTERVAL_MAX = 4095;
 
 // Minimum- en maximumwaarde voor de capacitieve vochtigheidssensor om de interpretatie "VOCHTIG" te krijgen
-const int CAPACITANCE_SENSOR_WET_INTERVAL_MIN = 2464;
-const int CAPACITANCE_SENSOR_WET_INTERVAL_MAX = 2871;
+const int CAPACITIEVE_SENSOR_VOCHTIG_INTERVAL_MIN = 2464;
+const int CAPACITIEVE_SENSOR_VOCHTIG_INTERVAL_MAX = 2871;
 
 // Minimum- en maximumwaarde voor de capacitieve vochtigheidssensor om de interpretatie "NAT" te krijgen
-const int CAPACITANCE_SENSOR_WATER_INTERVAL_MIN = 0;
-const int CAPACITANCE_SENSOR_WATER_INTERVAL_MAX = 2463;
+const int CAPACITIEVE_SENSOR_NAT_INTERVAL_MIN = 0;
+const int CAPACITIEVE_SENSOR_NAT_INTERVAL_MAX = 2463;
 
 
 // DEBUG

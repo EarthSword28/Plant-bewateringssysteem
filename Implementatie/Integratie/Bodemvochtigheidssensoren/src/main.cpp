@@ -7,14 +7,14 @@
 #define ARDUINOTRACE_ENABLE TRACE_SWITCH  // Enable(1)/Disable(0) all traces
 #include <ArduinoTrace.h>
 
-#define RESISTANCE_HUMIDITY_SENSOR 36
-#define CAPACITANCE_HUMIDITY_SENSOR 39
+#define RESISTIEVE_BODEMVOCHTIGHEIDS_SENSOR 36
+#define CAPACITIEVE_BODEMVOCHTIGHEIDS_SENSOR 39
 
-#define ONE_WIRE_BUS 12                   // temperature sensor
+#define ONE_WIRE_BUS 12                   // temperatuur sensor
 
 #define PANIC_BUTTON 4
 
-#define RELAY_MODULE 17                   // the relay for the pump
+#define RELAY_MODULE 17                   // de relay voor de pomp
  
 // Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);    
@@ -22,24 +22,24 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass oneWire reference to DallasTemperature library
 DallasTemperature sensors(&oneWire);
 
-float temperature = 0;
+float temperatuur = 0;
 
-unsigned long resistanceHumidityValue = 0;
-unsigned long capacitanceHumidityValue = 0;
+unsigned long resistieveBodemvochtigheidsWaarde = 0;
+unsigned long capacitieveBodemvochtigheidsWaarde = 0;
 
-unsigned long wateringTimeInterval = 0;
+unsigned long waterGevenTijdsInterval = 0;
 
-boolean pumpSwitch;
+boolean pompSchakelaar;
 boolean panicButtonSwitch;
 
 String waterStatus;
 
-String resistanceHumidityCategory = "";
-String capacitanceHumidityCategory = "";
-String finalHumidityCategory = "";
+String resistieveBodemvochtigheidsCategorie = "";
+String capacitieveBodemvochtigheidsCategorie = "";
+String finaleBodemvochtigheidsCategorie = "";
 
 unsigned long timer = 0;
-unsigned long wateringTimer = 0;
+unsigned long waterTimer = 0;
 unsigned long panicButtonDebounceTimer = 0;
 
 float get_temperature() {
@@ -47,117 +47,117 @@ float get_temperature() {
   // Send the command to get temperatures
   sensors.requestTemperatures(); 
 
-  //return the temperature in Celsius
+  //return the temperatuur in Celsius
   return sensors.getTempCByIndex(0);
 }
 
-String get_resistance_category(int sensorValue) {
+String get_resistance_category(int sensorWaarde) {
   TRACE();
-  if (sensorValue >= RESISTANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue < RESISTANCE_SENSOR_DRY_INTERVAL_MAX) {
-    return HUMIDITY_DRY;
+  if (sensorWaarde >= RESISTIEVE_SENSOR_DROOG_INTERVAL_MIN && sensorWaarde < RESISTIEVE_SENSOR_DROOG_INTERVAL_MAX) {
+    return VOCHTIGHEID_DROOG;
   }
-  else if (sensorValue >= RESISTANCE_SENSOR_WET_INTERVAL_MIN && sensorValue < RESISTANCE_SENSOR_WET_INTERVAL_MAX) {
-    return HUMIDITY_WET;
+  else if (sensorWaarde >= RESISTIEVE_SENSOR_VOCHTIG_INTERVAL_MIN && sensorWaarde < RESISTIEVE_SENSOR_VOCHTIG_INTERVAL_MAX) {
+    return VOCHTIGHEID_VOCHTIG;
   }
-  else if (sensorValue >= RESISTANCE_SENSOR_WATER_INTERVAL_MIN && sensorValue <= RESISTANCE_SENSOR_WATER_INTERVAL_MAX) {
-    return HUMIDITY_WATER;
+  else if (sensorWaarde >= RESISTIEVE_SENSOR_NAT_INTERVAL_MIN && sensorWaarde <= RESISTIEVE_SENSOR_NAT_INTERVAL_MAX) {
+    return VOCHTIGHEID_NAT;
   }
   else {
-    return HUMIDITY_NO_VALUE;
+    return VOCHTIGHEID_GEEN_METING;
   }
 }
 
-String get_capacitance_category(int sensorValue) {
+String get_capacitance_category(int sensorWaarde) {
   TRACE();
-  if (sensorValue >= CAPACITANCE_SENSOR_DRY_INTERVAL_MIN && sensorValue < CAPACITANCE_SENSOR_DRY_INTERVAL_MAX) {
-    return HUMIDITY_DRY;
+  if (sensorWaarde >= CAPACITIEVE_SENSOR_DROOG_INTERVAL_MIN && sensorWaarde < CAPACITIEVE_SENSOR_DROOG_INTERVAL_MAX) {
+    return VOCHTIGHEID_DROOG;
   }
-  else if (sensorValue >= CAPACITANCE_SENSOR_WET_INTERVAL_MIN && sensorValue < CAPACITANCE_SENSOR_WET_INTERVAL_MAX) {
-    return HUMIDITY_WET;
+  else if (sensorWaarde >= CAPACITIEVE_SENSOR_VOCHTIG_INTERVAL_MIN && sensorWaarde < CAPACITIEVE_SENSOR_VOCHTIG_INTERVAL_MAX) {
+    return VOCHTIGHEID_VOCHTIG;
   }
-  else if (sensorValue >= CAPACITANCE_SENSOR_WATER_INTERVAL_MIN && sensorValue <= CAPACITANCE_SENSOR_WATER_INTERVAL_MAX) {
-    return HUMIDITY_WATER;
+  else if (sensorWaarde >= CAPACITIEVE_SENSOR_NAT_INTERVAL_MIN && sensorWaarde <= CAPACITIEVE_SENSOR_NAT_INTERVAL_MAX) {
+    return VOCHTIGHEID_NAT;
   }
   else {
-    return HUMIDITY_NO_VALUE;
+    return VOCHTIGHEID_GEEN_METING;
   }
 }
 
-String get_final_category(String resistanceCategory, String capacitanceCategory) {
+String get_final_category(String resistieveCategorie, String capacitieveCategorie) {
   TRACE();
-  if (capacitanceCategory == HUMIDITY_DRY) {
-    return HUMIDITY_DRY;
+  if (capacitieveCategorie == VOCHTIGHEID_DROOG) {
+    return VOCHTIGHEID_DROOG;
   }
-  else if (capacitanceCategory == HUMIDITY_WET) {
-    if (resistanceCategory == HUMIDITY_DRY) {
-      return HUMIDITY_DRY;
+  else if (capacitieveCategorie == VOCHTIGHEID_VOCHTIG) {
+    if (resistieveCategorie == VOCHTIGHEID_DROOG) {
+      return VOCHTIGHEID_DROOG;
     }
     else {
-      return HUMIDITY_WET;
+      return VOCHTIGHEID_VOCHTIG;
     }
   }
-  else if (capacitanceCategory == HUMIDITY_WATER) {
-    if (resistanceCategory == HUMIDITY_DRY) {
-      return HUMIDITY_DRY;
+  else if (capacitieveCategorie == VOCHTIGHEID_NAT) {
+    if (resistieveCategorie == VOCHTIGHEID_DROOG) {
+      return VOCHTIGHEID_DROOG;
     }
-    else if (resistanceCategory == HUMIDITY_WET) {
-      return HUMIDITY_WET;
+    else if (resistieveCategorie == VOCHTIGHEID_VOCHTIG) {
+      return VOCHTIGHEID_VOCHTIG;
     }
     else {
-      return HUMIDITY_WATER;
+      return VOCHTIGHEID_NAT;
     }
   }
   else {
-    return resistanceCategory;
+    return resistieveCategorie;
   }
 }
 
 int read_sensors_and_give_water_if_neccesary(String humidityCategory, float temp) {
   TRACE();
-  if (humidityCategory == HUMIDITY_DRY) {
-    if (temp > MAX_TEMPERATURE) {
+  if (humidityCategory == VOCHTIGHEID_DROOG) {
+    if (temp > MAX_TEMPERATUUR) {
       waterStatus = WATER_GEVEN;
-      return WATERING_TIME_INTERVAL_LONG;
+      return WATER_GEVEN_INTERVAL_LANG;
     }
-    else if (temp > MIN_TEMPERATURE) {
+    else if (temp > MIN_TEMPERATUUR) {
       waterStatus = WATER_GEVEN;
-      return WATERING_TIME_INTERVAL_SHORT;
+      return WATER_GEVEN_INTERVAL_KORT;
     }
     else {
       waterStatus = GEEN_WATER_GEVEN;
-      return WATERING_TIME_INTERVAL_INACTIVE;
+      return WATER_GEVEN_INTERVAL_INACTIEF;
     }
   }
   else {
     waterStatus = GEEN_WATER_GEVEN;
-    return WATERING_TIME_INTERVAL_INACTIVE;
+    return WATER_GEVEN_INTERVAL_INACTIEF;
   }
 }
 
 void start_watering() {
   TRACE();
-  wateringTimer = millis();
-  pumpSwitch = HIGH;
+  waterTimer = millis();
+  pompSchakelaar = HIGH;
   digitalWrite(RELAY_MODULE, HIGH);
-  DUMP(wateringTimer);
+  DUMP(waterTimer);
 }
 
 void stop_watering() {
   TRACE();
   timer = millis();
-  wateringTimer = millis();
+  waterTimer = millis();
   waterStatus = GEEN_WATER_GEVEN;
-  pumpSwitch = LOW;
-  wateringTimeInterval = WATERING_TIME_INTERVAL_INACTIVE;
+  pompSchakelaar = LOW;
+  waterGevenTijdsInterval = WATER_GEVEN_INTERVAL_INACTIEF;
   digitalWrite(RELAY_MODULE, LOW);
-  DUMP(wateringTimer);
+  DUMP(waterTimer);
 }
 
 void panic_button() {
   panicButtonSwitch = HIGH;
   panicButtonDebounceTimer = millis();
   waterStatus = HIGH;
-  wateringTimeInterval = WATERING_TIME_INTERVAL_PANIC_BUTTON;
+  waterGevenTijdsInterval = WATER_GEVEN_INTERVAL_PANIC_BUTTON;
 }
 
 int get_MOCK_value(boolean randomSwitch, int value, int randomValue1, int randomValue2) {
@@ -170,23 +170,23 @@ int get_MOCK_value(boolean randomSwitch, int value, int randomValue1, int random
 }
 
 void setup() {
-  pinMode(RESISTANCE_HUMIDITY_SENSOR, INPUT);
-  pinMode(CAPACITANCE_HUMIDITY_SENSOR, INPUT);
+  pinMode(RESISTIEVE_BODEMVOCHTIGHEIDS_SENSOR, INPUT);
+  pinMode(CAPACITIEVE_BODEMVOCHTIGHEIDS_SENSOR, INPUT);
   pinMode(ONE_WIRE_BUS, INPUT);
   pinMode(PANIC_BUTTON, INPUT);
   pinMode(RELAY_MODULE, OUTPUT);
-  resistanceHumidityValue = 0;
-  capacitanceHumidityValue = 0;
+  resistieveBodemvochtigheidsWaarde = 0;
+  capacitieveBodemvochtigheidsWaarde = 0;
   digitalWrite(RELAY_MODULE, LOW);
 
   waterStatus = GEEN_WATER_GEVEN;
-  pumpSwitch = LOW;
+  pompSchakelaar = LOW;
   panicButtonSwitch = LOW;
-  wateringTimeInterval = 0;
+  waterGevenTijdsInterval = 0;
 
   Serial.begin(9600);
   timer = millis();
-  wateringTimer = millis();
+  waterTimer = millis();
   panicButtonDebounceTimer = millis();
   
   // Start up the sensor library
@@ -194,7 +194,7 @@ void setup() {
 }
 
 void loop() {
-  if (pumpSwitch == LOW && panicButtonSwitch == LOW && digitalRead(PANIC_BUTTON) == HIGH) {
+  if (pompSchakelaar == LOW && panicButtonSwitch == LOW && digitalRead(PANIC_BUTTON) == HIGH) {
     panic_button();
   }
   else if (panicButtonSwitch == HIGH && millis() - panicButtonDebounceTimer >= PANIC_BUTTON_DEBOUNCE) {
@@ -202,55 +202,55 @@ void loop() {
   }
   if (waterStatus == WATER_GEVEN) {
     TRACE();
-    DUMP(pumpSwitch);
+    DUMP(pompSchakelaar);
     DUMP(RELAY_MODULE);
-    if (pumpSwitch == LOW) {
+    if (pompSchakelaar == LOW) {
       start_watering();
     }
-    else if (millis() - wateringTimer >= wateringTimeInterval) {
+    else if (millis() - waterTimer >= waterGevenTijdsInterval) {
       stop_watering();
     }
-    DUMP(pumpSwitch);
+    DUMP(pompSchakelaar);
     DUMP(RELAY_MODULE);
     BREAK();
   }
-  else if (millis() - timer >= TIME_INTERVAL_SENSORS) {
+  else if (millis() - timer >= TIJD_INTERVAL_SENSOREN) {
     TRACE();
     timer = millis();
     DUMP(timer);
     BREAK();
 
     if (MOCK_SWITCH == LOW) {
-      resistanceHumidityValue = analogRead(RESISTANCE_HUMIDITY_SENSOR);
-      capacitanceHumidityValue = analogRead(CAPACITANCE_HUMIDITY_SENSOR);
+      resistieveBodemvochtigheidsWaarde = analogRead(RESISTIEVE_BODEMVOCHTIGHEIDS_SENSOR);
+      capacitieveBodemvochtigheidsWaarde = analogRead(CAPACITIEVE_BODEMVOCHTIGHEIDS_SENSOR);
     }
     else {
-      resistanceHumidityValue = get_MOCK_value(RESISTANCEE_SENSOR_MOCK_RANDOM, RESISTANCE_SENSOR_MOCK_VALUE, RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_1, RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_2);
-      capacitanceHumidityValue = get_MOCK_value(CAPACITANCE_SENSOR_MOCK_RANDOM, CAPACITANCE_SENSOR_MOCK_VALUE, CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_1, CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_2);
+      resistieveBodemvochtigheidsWaarde = get_MOCK_value(RESISTANCEE_SENSOR_MOCK_RANDOM, RESISTANCE_SENSOR_MOCK_VALUE, RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_1, RESISTANCE_SENSOR_MOCK_RANDOM_VALUE_2);
+      capacitieveBodemvochtigheidsWaarde = get_MOCK_value(CAPACITANCE_SENSOR_MOCK_RANDOM, CAPACITANCE_SENSOR_MOCK_VALUE, CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_1, CAPACITANCE_SENSOR_MOCK_RANDOM_VALUE_2);
     }
-    DUMP(resistanceHumidityValue);
-    DUMP(capacitanceHumidityValue);
+    DUMP(resistieveBodemvochtigheidsWaarde);
+    DUMP(capacitieveBodemvochtigheidsWaarde);
     BREAK();
 
-    resistanceHumidityCategory = get_resistance_category(resistanceHumidityValue);                        // resistanceHumidityCategory = get_resistance_category(resistanceHumidityValue);
-    capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);                     // capacitanceHumidityCategory = get_capacitance_category(capacitanceHumidityValue);
-    finalHumidityCategory = get_final_category(resistanceHumidityCategory, capacitanceHumidityCategory);
-    DUMP(resistanceHumidityCategory);
-    DUMP(capacitanceHumidityCategory);
-    DUMP(finalHumidityCategory);
+    resistieveBodemvochtigheidsCategorie = get_resistance_category(resistieveBodemvochtigheidsWaarde);                        // resistieveBodemvochtigheidsCategorie = get_resistance_category(resistieveBodemvochtigheidsWaarde);
+    capacitieveBodemvochtigheidsCategorie = get_capacitance_category(capacitieveBodemvochtigheidsWaarde);                     // capacitieveBodemvochtigheidsCategorie = get_capacitance_category(capacitieveBodemvochtigheidsWaarde);
+    finaleBodemvochtigheidsCategorie = get_final_category(resistieveBodemvochtigheidsCategorie, capacitieveBodemvochtigheidsCategorie);
+    DUMP(resistieveBodemvochtigheidsCategorie);
+    DUMP(capacitieveBodemvochtigheidsCategorie);
+    DUMP(finaleBodemvochtigheidsCategorie);
     BREAK();
 
     if (MOCK_SWITCH == LOW) {
-      temperature = get_temperature();               // temperature = get_temperature();
+      temperatuur = get_temperature();               // temperatuur = get_temperature();
     }
     else {
-      temperature = get_MOCK_value(TEMPERATURE_SENSOR_MOCK_RANDOM, TEMPERATURE_SENSOR_MOCK_VALUE, TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_1, TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_2);
+      temperatuur = get_MOCK_value(TEMPERATURE_SENSOR_MOCK_RANDOM, TEMPERATURE_SENSOR_MOCK_VALUE, TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_1, TEMPERATURE_SENSOR_MOCK_RANDOM_VALUE_2);
     }
-    DUMP(temperature);
+    DUMP(temperatuur);
     BREAK();
 
-    wateringTimeInterval = read_sensors_and_give_water_if_neccesary(finalHumidityCategory, temperature);
-    DUMP(wateringTimeInterval);
+    waterGevenTijdsInterval = read_sensors_and_give_water_if_neccesary(finaleBodemvochtigheidsCategorie, temperatuur);
+    DUMP(waterGevenTijdsInterval);
 
     BREAK();
   }
