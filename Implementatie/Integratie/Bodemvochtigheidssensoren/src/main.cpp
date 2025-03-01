@@ -1,9 +1,10 @@
 // BRONNEN
-  // de code voor de temperatuursensor: https://canvas.kdg.be/courses/49816/pages/digitale-temperatuursensor-ds18b20-waterproof?module_item_id=1126867
-  // ArduinoTrace: https://github.com/bblanchon/ArduinoTrace
-  // leren werken met strings: https://docs.arduino.cc/language-reference/en/variables/data-types/stringObject/?_gl=1*mcu2lh*_up*MQ..*_ga*MTUzMzU4NTIyNS4xNzQwNTY2MTI2*_ga_NEXN8H46L5*MTc0MDU2NjEyNS4xLjEuMTc0MDU2NjU2Mi4wLjAuMjExOTM3Njc3Nw..
+  // de code voor de temperatuursensor: https://canvas.kdg.be/courses/49816/pages/digitale-temperatuursensor-ds18b20-waterproof?module_item_id=1126867 (01/03/2025)
+  // ArduinoTrace: https://github.com/bblanchon/ArduinoTrace (01/03/2025)
+  // leren werken met strings: https://docs.arduino.cc/language-reference/en/variables/data-types/stringObject/?_gl=1*mcu2lh*_up*MQ..*_ga*MTUzMzU4NTIyNS4xNzQwNTY2MTI2*_ga_NEXN8H46L5*MTc0MDU2NjEyNS4xLjEuMTc0MDU2NjU2Mi4wLjAuMjExOTM3Njc3Nw.. (01/03/2025)
+  // code layout: https://canvas.kdg.be/courses/49816/pages/basisstructuur-code-en-configuratie-van-het-plantbewateringssysteem?module_item_id=1168940 (01/03/2025)
 
-  // code referentie: https://canvas.kdg.be/courses/49816
+  // code referentie: https://canvas.kdg.be/courses/49816 (01/03/2025)
 
 #include <Arduino.h>
 #include <OneWire.h>
