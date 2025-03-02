@@ -50,22 +50,22 @@ const int CAPACITIEVE_SENSOR_NAT_INTERVAL_MAX = 2463;
 
 
 // DEBUG
-const int TRACE_SCHAKELAAR = 1;  // schakel alle trace-commando's aan(1)/uit(0)
+// const int TRACE_SCHAKELAAR = 1;  // schakel alle trace-commando's aan(1)/uit(0): Dit werkt alleen als het in het main.cpp bestand staat, niet als het in het config bestand staat.
 
-  // MOCK
-const bool MOCK_SCHAKELAAR = LOW;   // schakel alle mock waarden aan(HIGH)/uit(LOW)
+// MOCK
+const bool MOCK_SCHAKELAAR = HIGH;   // schakel alle mock waarden aan(HIGH)/uit(LOW)
 
-const bool CAPACITIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR = LOW;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
+const bool CAPACITIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR = HIGH;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
 const int CAPACITIEVE_SENSOR_MOCK_WAARDE = 0;
 const int CAPACITIEVE_SENSOR_MOCK_RANDOM_WAARDE_1 = 0;
 const int CAPACITIEVE_SENSOR_MOCK_RANDOM_WAARDE_2 = 4095;
 
-const bool RESISTIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR = LOW;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
+const bool RESISTIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR = HIGH;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
 const int RESISTIEVE_SENSOR_MOCK_WAARDE = 0;
 const int RESISTIEVE_SENSOR_MOCK_RANDOM_WAARDE_1 = 0;
 const int RESISTIEVE_SENSOR_MOCK_RANDOM_WAARDE_2 = 4095;
 
-const bool TEMPERATUUR_SENSOR_MOCK_RANDOM_SCHAKELAAR = LOW;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
+const bool TEMPERATUUR_SENSOR_MOCK_RANDOM_SCHAKELAAR = HIGH;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
 const int TEMPERATUUR_SENSOR_MOCK_WAARDE = 0;
 const int TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_1 = 0;
 const int TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_2 = 30;

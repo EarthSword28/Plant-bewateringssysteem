@@ -12,7 +12,7 @@
 
 #include <config.h>
 
-#define ARDUINOTRACE_ENABLE TRACE_SCHAKELAAR  // schakel alle trace-commando's aan(1)/uit(0)
+#define ARDUINOTRACE_ENABLE 1  // schakel alle trace-commando's aan(1)/uit(0)
 #include <ArduinoTrace.h>
 
 // DONE: Definieer juiste pinnummers voor sensoren
@@ -52,9 +52,8 @@ boolean panicButtonSchakelaar;
  * Geeft de temperatuur in °C terug.
  */
 float leesTemperatuur() {
-  // DONE: Implementeer zodat de temperatuur op de juiste manier wordt ingelezen
-  return 0;
   TRACE();
+  // DONE: Implementeer zodat de temperatuur op de juiste manier wordt ingelezen
   // Send the command to get temperatures
   sensors.requestTemperatures(); 
 
@@ -66,6 +65,7 @@ float leesTemperatuur() {
  * Bepaal de juiste sensorwaarde voor de capacitieve bodemvochtigheidssensor.
  */
 int leesCapacitieveBVHSensor() {
+  TRACE();
   // DONE: Implementeer inlezen met correcte pinnen
   return analogRead(CAPACITIEVE_BODEMVOCHTIGHEIDS_SENSOR);
 }
@@ -74,12 +74,14 @@ int leesCapacitieveBVHSensor() {
  * Bepaal de juiste sensorwaarde voor de resistieve bodemvochtigheidssensor.
  */
 int leesResistieveBVHSensor() {
+  TRACE();
   // DONE: Implementeer inlezen met correcte pinnen
   return analogRead(RESISTIEVE_BODEMVOCHTIGHEIDS_SENSOR);
 }
 
 /* MOCK functies om sensoren te bypassen */
 int leesTemperatuur_MOCK(boolean randomSchakelaar, int waarde, int randomWaarde1, int randomWaarde2) {
+  TRACE();
   if (randomSchakelaar == LOW) {
     return waarde;
   }
@@ -90,6 +92,7 @@ int leesTemperatuur_MOCK(boolean randomSchakelaar, int waarde, int randomWaarde1
 }
 
 int leesCapacitieveBVHSensor_MOCK(boolean randomSchakelaar, int waarde, int randomWaarde1, int randomWaarde2) {
+  TRACE();
   if (randomSchakelaar == LOW) {
     return waarde;
   }
@@ -100,6 +103,7 @@ int leesCapacitieveBVHSensor_MOCK(boolean randomSchakelaar, int waarde, int rand
 }
 
 int leesResistieveBVHSensor_MOCK(boolean randomSchakelaar, int waarde, int randomWaarde1, int randomWaarde2) {
+  TRACE();
   if (randomSchakelaar == LOW) {
     return waarde;
   }
@@ -117,15 +121,15 @@ int leesResistieveBVHSensor_MOCK(boolean randomSchakelaar, int waarde, int rando
  * Pas het type van de return value in het functievoorschrift aan op basis van je configuratiebestand.
  */
 String berekenCategorieCapactieveBHV(int sensorwaarde) {
-  // DONE: Implementeer zodat de categorie voor de capacitieve BVH sensor wordt berekend.
+  // DONE: Implementeer zodat de categorie voor de resistieve BVH sensor wordt berekend.
   TRACE();
-  if (sensorwaarde >= RESISTIEVE_SENSOR_DROOG_INTERVAL_MIN && sensorwaarde < RESISTIEVE_SENSOR_DROOG_INTERVAL_MAX) {
+  if (sensorwaarde >= CAPACITIEVE_SENSOR_DROOG_INTERVAL_MIN && sensorwaarde < CAPACITIEVE_SENSOR_DROOG_INTERVAL_MAX) {
     return VOCHTIGHEID_DROOG;
   }
-  else if (sensorwaarde >= RESISTIEVE_SENSOR_VOCHTIG_INTERVAL_MIN && sensorwaarde < RESISTIEVE_SENSOR_VOCHTIG_INTERVAL_MAX) {
+  else if (sensorwaarde >= CAPACITIEVE_SENSOR_VOCHTIG_INTERVAL_MIN && sensorwaarde < CAPACITIEVE_SENSOR_VOCHTIG_INTERVAL_MAX) {
     return VOCHTIGHEID_VOCHTIG;
   }
-  else if (sensorwaarde >= RESISTIEVE_SENSOR_NAT_INTERVAL_MIN && sensorwaarde <= RESISTIEVE_SENSOR_NAT_INTERVAL_MAX) {
+  else if (sensorwaarde >= CAPACITIEVE_SENSOR_NAT_INTERVAL_MIN && sensorwaarde <= CAPACITIEVE_SENSOR_NAT_INTERVAL_MAX) {
     return VOCHTIGHEID_NAT;
   }
   else {
@@ -141,15 +145,15 @@ String berekenCategorieCapactieveBHV(int sensorwaarde) {
  * Pas het type van de return value in het functievoorschrift aan op basis van je configuratiebestand.
  */
 String berekenCategorieResistieveBVH(int sensorwaarde) {
-  // DONE: Implementeer zodat de categorie voor de resistieve BVH sensor wordt berekend.
+  // DONE: Implementeer zodat de categorie voor de capacitieve BVH sensor wordt berekend.
   TRACE();
-  if (sensorwaarde >= CAPACITIEVE_SENSOR_DROOG_INTERVAL_MIN && sensorwaarde < CAPACITIEVE_SENSOR_DROOG_INTERVAL_MAX) {
+  if (sensorwaarde >= RESISTIEVE_SENSOR_DROOG_INTERVAL_MIN && sensorwaarde < RESISTIEVE_SENSOR_DROOG_INTERVAL_MAX) {
     return VOCHTIGHEID_DROOG;
   }
-  else if (sensorwaarde >= CAPACITIEVE_SENSOR_VOCHTIG_INTERVAL_MIN && sensorwaarde < CAPACITIEVE_SENSOR_VOCHTIG_INTERVAL_MAX) {
+  else if (sensorwaarde >= RESISTIEVE_SENSOR_VOCHTIG_INTERVAL_MIN && sensorwaarde < RESISTIEVE_SENSOR_VOCHTIG_INTERVAL_MAX) {
     return VOCHTIGHEID_VOCHTIG;
   }
-  else if (sensorwaarde >= CAPACITIEVE_SENSOR_NAT_INTERVAL_MIN && sensorwaarde <= CAPACITIEVE_SENSOR_NAT_INTERVAL_MAX) {
+  else if (sensorwaarde >= RESISTIEVE_SENSOR_NAT_INTERVAL_MIN && sensorwaarde <= RESISTIEVE_SENSOR_NAT_INTERVAL_MAX) {
     return VOCHTIGHEID_NAT;
   }
   else {
@@ -200,6 +204,8 @@ void zetWaterpompAan(int duurtijd) {
   waterStatus = WATER_GEVEN;
 
   DUMP(RELAY_MODULE);
+  DUMP(millis());
+  DUMP(duurtijd);
   DUMP(waterTimer);
 }
 
@@ -228,14 +234,18 @@ void leesSensorenEnGeefWaterIndienNodig() {
   int capacitieve_bvh_waarde = leesCapacitieveBVHSensor();
   int resistieve_bvh_waarde = leesResistieveBVHSensor();
   int temperatuur = leesTemperatuur();
-  if (MOCK_SCHAKELAAR == HIGH) {
-    capacitieve_bvh_waarde = leesCapacitieveBVHSensor_MOCK(CAPACITIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR, CAPACITIEVE_SENSOR_MOCK_WAARDE, CAPACITIEVE_SENSOR_MOCK_RANDOM_WAARDE_1, CAPACITIEVE_SENSOR_MOCK_RANDOM_WAARDE_2);
-    resistieve_bvh_waarde = leesResistieveBVHSensor_MOCK(RESISTIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR, RESISTIEVE_SENSOR_MOCK_WAARDE, RESISTIEVE_SENSOR_MOCK_RANDOM_WAARDE_2, RESISTIEVE_SENSOR_MOCK_RANDOM_WAARDE_2);
-    temperatuur = leesTemperatuur_MOCK(TEMPERATUUR_SENSOR_MOCK_RANDOM_SCHAKELAAR, TEMPERATUUR_SENSOR_MOCK_WAARDE, TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_1, TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_2);
-  }
   DUMP(capacitieve_bvh_waarde);
   DUMP(resistieve_bvh_waarde);
   DUMP(temperatuur);
+  if (MOCK_SCHAKELAAR == HIGH) {
+    capacitieve_bvh_waarde = leesCapacitieveBVHSensor_MOCK(CAPACITIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR, CAPACITIEVE_SENSOR_MOCK_WAARDE, CAPACITIEVE_SENSOR_MOCK_RANDOM_WAARDE_1, CAPACITIEVE_SENSOR_MOCK_RANDOM_WAARDE_2);
+    resistieve_bvh_waarde = leesResistieveBVHSensor_MOCK(RESISTIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR, RESISTIEVE_SENSOR_MOCK_WAARDE, RESISTIEVE_SENSOR_MOCK_RANDOM_WAARDE_1, RESISTIEVE_SENSOR_MOCK_RANDOM_WAARDE_2);
+    temperatuur = leesTemperatuur_MOCK(TEMPERATUUR_SENSOR_MOCK_RANDOM_SCHAKELAAR, TEMPERATUUR_SENSOR_MOCK_WAARDE, TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_1, TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_2);
+    Serial.println("Mock Values");
+    DUMP(capacitieve_bvh_waarde);
+    DUMP(resistieve_bvh_waarde);
+    DUMP(temperatuur);
+  }
   BREAK();
 
   // Bepaal individuele categoriën en samengestelde categorie
@@ -262,17 +272,21 @@ void leesSensorenEnGeefWaterIndienNodig() {
 }
 
 void panic_button() {
+  TRACE();
   panicButtonSchakelaar = HIGH;
   panicButtonDebounceTimer = millis();
   zetWaterpompAan(WATER_GEVEN_INTERVAL_PANIC_BUTTON);
+  BREAK();
+  timer = millis();
 }
 
 void setup() {
+  TRACE();
   // DONE: Implementeer de nodig code voor lezen sensoren (indien nodig)
   pinMode(RESISTIEVE_BODEMVOCHTIGHEIDS_SENSOR, INPUT);
   pinMode(CAPACITIEVE_BODEMVOCHTIGHEIDS_SENSOR, INPUT);
   pinMode(ONE_WIRE_BUS, INPUT);
-  pinMode(PANIC_BUTTON, INPUT);
+  pinMode(PANIC_BUTTON, INPUT_PULLUP);
   pinMode(RELAY_MODULE, OUTPUT);
   digitalWrite(RELAY_MODULE, LOW);
 
@@ -290,10 +304,8 @@ void setup() {
 }
 
 void loop() {
-  TRACE();
   // We hebben huidige millis nodig om de verschillende processen te controleren (water geven / stoppen)
   long huidigeMillis = millis();
-  DUMP(huidigeMillis);
   
   // DONE: Controleer of de waterpomp uitgezet moet worden en roep functie zetWaterpompUit() aan indien nodig
   if (waterStatus == WATER_GEVEN) {
@@ -302,7 +314,7 @@ void loop() {
       BREAK();
     }
   }
-  else if (panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == HIGH) {
+  else if (panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == LOW) {
     panic_button();
   }
   else if (panicButtonSchakelaar == HIGH && huidigeMillis - panicButtonDebounceTimer >= PANIC_BUTTON_DEBOUNCE) {
@@ -310,7 +322,9 @@ void loop() {
   }
   // DONE: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
   else if (huidigeMillis - timer >= TIJD_INTERVAL_SENSOREN) {
+    TRACE();
     timer = huidigeMillis;
+    DUMP(timer);
     leesSensorenEnGeefWaterIndienNodig();
     BREAK();
   }
