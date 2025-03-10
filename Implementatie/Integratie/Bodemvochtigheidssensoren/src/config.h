@@ -1,8 +1,8 @@
-// DONE: Wachttijd tussen 2 opeenvolgende inlezingen van sensoren
+// DONE: Wachttijd tussen 2 opeenvolgende inlezingen van sensoren (in milliseconden)
 const int TIJD_INTERVAL_SENSOREN = 5000;
 const int PANIC_BUTTON_DEBOUNCE = 500;
 
-// DONE: Temperatuur schakelwaarden
+// DONE: Temperatuur schakelwaarden (in °C )
 const int MIN_TEMPERATUUR = 5;
 const int MAX_TEMPERATUUR = 25;
 
