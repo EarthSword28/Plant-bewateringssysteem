@@ -41,7 +41,7 @@ unsigned long waterTimer = 0;
 unsigned long waterGevenTijdsInterval = 0;
 
 // DONE: Variabele om status van de waterpomp aan te geven, dit is nodig om te kunnen controlleren of de waterpomp gestopt moet worden
-String waterStatus = "";
+String waterStatus = GEEN_WATER_GEVEN;
 boolean pompSchakelaar;
 
 boolean panicButtonSchakelaar;
