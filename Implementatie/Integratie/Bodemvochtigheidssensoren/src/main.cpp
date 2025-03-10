@@ -274,7 +274,7 @@ void leesSensorenEnGeefWaterIndienNodig() {
 void panic_button() {
   TRACE();
   panicButtonSchakelaar = HIGH;
-  panicButtonDebounceTimer = millis();
+  panicButtonDebounceTimer = millis() + PANIC_BUTTON_DEBOUNCE;
   zetWaterpompAan(WATER_GEVEN_INTERVAL_PANIC_BUTTON);
   BREAK();
   timer = millis();
@@ -317,13 +317,14 @@ void loop() {
   else if (panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == LOW) {
     panic_button();
   }
-  else if (panicButtonSchakelaar == HIGH && huidigeMillis - panicButtonDebounceTimer >= PANIC_BUTTON_DEBOUNCE) {
+  else if (panicButtonSchakelaar == HIGH && huidigeMillis >= panicButtonDebounceTimer) {
     panicButtonSchakelaar = LOW;
   }
   // DONE: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
-  else if (huidigeMillis - timer >= TIJD_INTERVAL_SENSOREN) {
+  else if (huidigeMillis >= timer) {
     TRACE();
-    timer = huidigeMillis;
+    timer = huidigeMillis + TIJD_INTERVAL_SENSOREN;
+    DUMP(huidigeMillis);
     DUMP(timer);
     leesSensorenEnGeefWaterIndienNodig();
     BREAK();
