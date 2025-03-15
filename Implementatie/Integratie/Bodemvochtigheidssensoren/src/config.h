@@ -69,3 +69,6 @@ const bool TEMPERATUUR_SENSOR_MOCK_RANDOM_SCHAKELAAR = HIGH;  // schakel alle wi
 const int TEMPERATUUR_SENSOR_MOCK_WAARDE = 0;
 const int TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_1 = 0;
 const int TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_2 = 30;
+
+  // veranderingen
+// ik was vergeten om dit bestand te uploaden voor de eerste deadline, met als gevolg dat er geen veranderingen zijn
