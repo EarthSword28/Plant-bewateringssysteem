@@ -16,6 +16,10 @@ const String VOCHTIGHEID_NAT = "NAT";
 const String GEEN_WATER_GEVEN = "GEEN WATER GEVEN";
 const String WATER_GEVEN = "WATER GEVEN";
 
+// Deep Sleep
+const String DEEP_SLEEP_ON = "DEEP SLEEP AAN";
+const String DEEP_SLEEP_OFF = "DEEP SLEEP UIT";
+
 // DONE: Duurtijden water geven (in milliseconden)
 const int WATER_GEVEN_INTERVAL_INACTIEF = 0;
 const int WATER_GEVEN_INTERVAL_KORT = 1000;
@@ -53,7 +57,7 @@ const int CAPACITIEVE_SENSOR_NAT_INTERVAL_MAX = 2463;
 // const int TRACE_SCHAKELAAR = 1;  // schakel alle trace-commando's aan(1)/uit(0): Dit werkt alleen als het in het main.cpp bestand staat, niet als het in het config bestand staat.
 
 // MOCK
-const bool MOCK_SCHAKELAAR = HIGH;   // schakel alle mock waarden aan(HIGH)/uit(LOW)
+const bool MOCK_SCHAKELAAR = LOW;   // schakel alle mock waarden aan(HIGH)/uit(LOW)
 
 const bool CAPACITIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR = HIGH;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
 const int CAPACITIEVE_SENSOR_MOCK_WAARDE = 0;
