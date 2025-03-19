@@ -19,7 +19,7 @@
 #define RESISTIEVE_BODEMVOCHTIGHEIDS_SENSOR 36
 #define CAPACITIEVE_BODEMVOCHTIGHEIDS_SENSOR 39
 
-#define ONE_WIRE_BUS 12                   // temperatuur sensor
+#define ONE_WIRE_BUS 4                   // temperatuur sensor
 
 #define PANIC_BUTTON 27                   // gebruik de ingebouwde knop als de panic button
 
