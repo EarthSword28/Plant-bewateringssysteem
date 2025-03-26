@@ -46,13 +46,22 @@ boolean pompSchakelaar;
 
 boolean panicButtonSchakelaar;
 
+/*
+  placeholder source
+*/
+#include <driver/rtc_io.h>
 
-#define uS_TO_S_FACTOR 1000000  /* Conversion factor for micro seconds to seconds */
-#define TIME_TO_SLEEP  5        /* Time ESP32 will go to sleep (in seconds) */
+#define BUTTON_PIN_BITMASK(GPIO) (1ULL << GPIO)  // 2 ^ GPIO_NUMBER in hex
+#define WAKEUP_GPIO GPIO_NUM_27
+
+#define uS_TO_S_FACTOR 1000                     /* Conversion factor for micro seconds to seconds */
+#define TIME_TO_SLEEP  TIJD_INTERVAL_SENSOREN   /* Time ESP32 will go to sleep (in seconds) */
 
 RTC_DATA_ATTR int bootCount = 0;
+RTC_DATA_ATTR int loopCount = 0;
 
 String deepSleepSchakelaar = DEEP_SLEEP_ON;
+String deepSleepWakeUpReason = "";
 
 /*
 Method to print the reason by which ESP32
@@ -71,6 +80,12 @@ void print_wakeup_reason(){
     case ESP_SLEEP_WAKEUP_TOUCHPAD : Serial.println("Wakeup caused by touchpad"); break;
     case ESP_SLEEP_WAKEUP_ULP : Serial.println("Wakeup caused by ULP program"); break;
     default : Serial.printf("Wakeup was not caused by deep sleep: %d\n",wakeup_reason); break;
+  }
+  if (wakeup_reason == ESP_SLEEP_WAKEUP_EXT0) {
+    deepSleepWakeUpReason = DEEP_SLEEP_WAKE_UP_PANIC_BUTTON;
+  }
+  else {
+    deepSleepWakeUpReason = DEEP_SLEEP_WAKE_UP_TIME;
   }
 }
 
@@ -339,11 +354,18 @@ void setup() {
 
   /*
   First we configure the wake up source
-  We set our ESP32 to wake up every 5 seconds
+  We set our ESP32 to wake up every x seconds
   */
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
   Serial.println("Setup ESP32 to sleep for every " + String(TIME_TO_SLEEP) +
   " Seconds");
+
+  esp_sleep_enable_ext0_wakeup(WAKEUP_GPIO, 1);  //1 = High, 0 = Low
+  // Configure pullup/downs via RTCIO to tie wakeup pins to inactive level during deepsleep.
+  // EXT0 resides in the same power domain (RTC_PERIPH) as the RTC IO pullup/downs.
+  // No need to keep that power domain explicitly, unlike EXT1.
+  rtc_gpio_pullup_dis(WAKEUP_GPIO);
+  rtc_gpio_pulldown_en(WAKEUP_GPIO);
   }
 
   // Start up the sensor library
@@ -368,7 +390,7 @@ void loop() {
     panicButtonSchakelaar = LOW;
   }
   // DONE: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
-  else if (huidigeMillis >= timer) {
+  else if (deepSleepSchakelaar == DEEP_SLEEP_OFF && huidigeMillis >= timer) {
     TRACE();
     timer = huidigeMillis + TIJD_INTERVAL_SENSOREN;
     DUMP(huidigeMillis);
@@ -376,12 +398,28 @@ void loop() {
     leesSensorenEnGeefWaterIndienNodig();
     BREAK();
   }
-  if (deepSleepSchakelaar == DEEP_SLEEP_ON && waterStatus == GEEN_WATER_GEVEN) {
-    Serial.println("Going to sleep now");
-    Serial.println(millis());
-    delay(1000);
-    Serial.flush(); 
-    esp_deep_sleep_start();
-    Serial.println("This will never be printed");
+  
+  if (deepSleepSchakelaar == DEEP_SLEEP_ON) {
+    if (loopCount < bootCount) {
+      ++loopCount;
+      if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_TIME) {
+        TRACE();
+        DUMP(huidigeMillis);
+        leesSensorenEnGeefWaterIndienNodig();
+        BREAK();
+      }
+      else if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_PANIC_BUTTON) {
+        TRACE();
+        panic_button();
+      }
+    }
+    else if (waterStatus == GEEN_WATER_GEVEN) {
+      Serial.println("Going to sleep now");
+      Serial.println(millis());
+      delay(1000);
+      Serial.flush(); 
+      esp_deep_sleep_start();
+      Serial.println("This will never be printed");
+    }
   }
 }

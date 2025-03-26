@@ -20,6 +20,9 @@ const String WATER_GEVEN = "WATER GEVEN";
 const String DEEP_SLEEP_ON = "DEEP SLEEP AAN";
 const String DEEP_SLEEP_OFF = "DEEP SLEEP UIT";
 
+const String DEEP_SLEEP_WAKE_UP_TIME = "DEEP SLEEP TIMER";
+const String DEEP_SLEEP_WAKE_UP_PANIC_BUTTON = "DEEP SLEEP PANIC BUTTON";
+
 // DONE: Duurtijden water geven (in milliseconden)
 const int WATER_GEVEN_INTERVAL_INACTIEF = 0;
 const int WATER_GEVEN_INTERVAL_KORT = 1000;
