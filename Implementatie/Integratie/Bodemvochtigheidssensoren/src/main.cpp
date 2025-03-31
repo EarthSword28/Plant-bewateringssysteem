@@ -393,29 +393,6 @@ void loop() {
   // We hebben huidige millis nodig om de verschillende processen te controleren (water geven / stoppen)
   long huidigeMillis = millis();
   
-  // DONE: Controleer of de waterpomp uitgezet moet worden en roep functie zetWaterpompUit() aan indien nodig
-  if (waterStatus == WATER_GEVEN) {
-    if (huidigeMillis >= waterTimer) {
-      zetWaterpompUit();
-      BREAK();
-    }
-  }
-  else if (panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == LOW) {
-    panic_button();
-  }
-  else if (panicButtonSchakelaar == HIGH && huidigeMillis >= panicButtonDebounceTimer) {
-    panicButtonSchakelaar = LOW;
-  }
-  // DONE: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
-  else if (deepSleepSchakelaar == DEEP_SLEEP_OFF && huidigeMillis >= timer) {
-    TRACE();
-    timer = huidigeMillis + TIJD_INTERVAL_SENSOREN;
-    DUMP(huidigeMillis);
-    DUMP(timer);
-    leesSensorenEnGeefWaterIndienNodig();
-    BREAK();
-  }
-  
   if (deepSleepSchakelaar == DEEP_SLEEP_ON) {
     if (loopCount < bootCount) {
       ++loopCount;
@@ -438,5 +415,28 @@ void loop() {
       esp_deep_sleep_start();
       Serial.println("This will never be printed");
     }
+  }
+  // DONE: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
+  else if (waterStatus != WATER_GEVEN && huidigeMillis >= timer) {
+    TRACE();
+    timer = huidigeMillis + TIJD_INTERVAL_SENSOREN;
+    DUMP(huidigeMillis);
+    DUMP(timer);
+    leesSensorenEnGeefWaterIndienNodig();
+    BREAK();
+  }
+  
+  // DONE: Controleer of de waterpomp uitgezet moet worden en roep functie zetWaterpompUit() aan indien nodig
+  if (waterStatus == WATER_GEVEN) {
+    if (huidigeMillis >= waterTimer) {
+      zetWaterpompUit();
+      BREAK();
+    }
+  }
+  else if (panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == LOW) {
+    panic_button();
+  }
+  else if (panicButtonSchakelaar == HIGH && huidigeMillis >= panicButtonDebounceTimer) {
+    panicButtonSchakelaar = LOW;
   }
 }
