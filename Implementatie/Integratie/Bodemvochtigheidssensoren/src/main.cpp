@@ -6,6 +6,8 @@
 
   // code referentie: https://canvas.kdg.be/courses/49816 (01/03/2025)
 
+  // DEEP SLEEP met behulp van EXT0: https://www.programmingelectronics.com/external-wake-up-esp32/ (31/03/2025)
+
 #include <Arduino.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -358,29 +360,29 @@ void setup() {
   panicButtonDebounceTimer = millis();
 
   if (deepSleepSchakelaar == DEEP_SLEEP_ON) {
-  delay(1000); //Take some time to open up the Serial Monitor
+    delay(1000); //Take some time to open up the Serial Monitor
 
-  //Increment boot number and print it every reboot
-  ++bootCount;
-  Serial.println("Boot number: " + String(bootCount));
+    //Increment boot number and print it every reboot
+    ++bootCount;
+    Serial.println("Boot number: " + String(bootCount));
 
-  //Print the wakeup reason for ESP32
-  get_wakeup_reason();
+    //Print the wakeup reason for ESP32
+    get_wakeup_reason();
 
-  /*
-  First we configure the wake up source
-  We set our ESP32 to wake up every x seconds
-  */
-  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
-  Serial.println("Setup ESP32 to sleep for every " + String(TIME_TO_SLEEP) +
-  " Seconds");
+    esp_sleep_enable_ext0_wakeup((gpio_num_t)WAKEUP_GPIO, 0);  //1 = High, 0 = Low
+    // Configure pullup/downs via RTCIO to tie wakeup pins to inactive level during deepsleep.
+    // EXT0 resides in the same power domain (RTC_PERIPH) as the RTC IO pullup/downs.
+    // No need to keep that power domain explicitly, unlike EXT1.
+    rtc_gpio_pullup_en(WAKEUP_GPIO);
+    rtc_gpio_pulldown_dis(WAKEUP_GPIO);
 
-  esp_sleep_enable_ext0_wakeup(WAKEUP_GPIO, 1);  //1 = High, 0 = Low
-  // Configure pullup/downs via RTCIO to tie wakeup pins to inactive level during deepsleep.
-  // EXT0 resides in the same power domain (RTC_PERIPH) as the RTC IO pullup/downs.
-  // No need to keep that power domain explicitly, unlike EXT1.
-  rtc_gpio_pullup_dis(WAKEUP_GPIO);
-  rtc_gpio_pulldown_en(WAKEUP_GPIO);
+    /*
+    First we configure the wake up source
+    We set our ESP32 to wake up every x seconds
+    */
+    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+    Serial.println("Setup ESP32 to sleep for every " + String(TIME_TO_SLEEP) +
+    " Seconds");
   }
 
   // Start up the sensor library
