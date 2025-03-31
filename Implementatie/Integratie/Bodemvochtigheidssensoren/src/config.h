@@ -24,6 +24,21 @@ const String DEEP_SLEEP_WAKE_UP_TIME = "DEEP SLEEP TIMER";
 const String DEEP_SLEEP_WAKE_UP_PANIC_BUTTON = "DEEP SLEEP PANIC BUTTON";
 const String DEEP_SLEEP_WAKE_UP_UNDEFINED = "DEEP SLEEP NOT DEFINED";
 
+// waarschuwing
+const String WAARSCHUWING_GEVAAR = "GEVAAR";
+const String WAARSCHUWING_OK = "OK";
+
+// acce
+/* 
+const int DOWN_X = DFRobot_LIS2DW12::eXDown;
+const int UP_X = DFRobot_LIS2DW12::eXUp;
+const int DOWN_Y = DFRobot_LIS2DW12::eYDown;
+const int UP_Y = DFRobot_LIS2DW12::eYUp;
+const int DOWN_Z = DFRobot_LIS2DW12::eZDown;
+const int UP_Z = DFRobot_LIS2DW12::eZUp; 
+*/
+const int STANDAARD_ORIENTATIE = DFRobot_LIS2DW12::eZUp;
+
 // DONE: Duurtijden water geven (in milliseconden)
 const int WATER_GEVEN_INTERVAL_INACTIEF = 0;
 const int WATER_GEVEN_INTERVAL_KORT = 1000;
