@@ -8,7 +8,6 @@
 
   // DEEP SLEEP met behulp van EXT0: https://www.programmingelectronics.com/external-wake-up-esp32/ (31/03/2025)
 
-  
 /**！
  * @file activityDetect.ino
  * @brief Motion detection, can detect whether the module is moving
