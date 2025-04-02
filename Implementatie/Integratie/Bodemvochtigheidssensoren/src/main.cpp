@@ -102,7 +102,6 @@ String deepSleepWakeUpReason = "";
 Method to print the reason by which ESP32
 has been awaken from sleep
 */
-
 void get_wakeup_reason() {
   TRACE();
   esp_sleep_wakeup_cause_t wakeup_reason;
