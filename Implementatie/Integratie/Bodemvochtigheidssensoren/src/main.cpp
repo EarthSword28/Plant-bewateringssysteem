@@ -542,7 +542,7 @@ void loop() {
   long huidigeMillis = millis();
   huidigeOrientatie = acce.getOrientation();
 
-if (huidigeOrientatie == STANDAARD_ORIENTATIE) {
+  if (huidigeOrientatie == STANDAARD_ORIENTATIE) {
     waarschuwing = WAARSCHUWING_OK;
   }
   else {
