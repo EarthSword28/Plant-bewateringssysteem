@@ -93,7 +93,8 @@ String waarschuwing = WAARSCHUWING_OK;
 #define TIME_TO_SLEEP  TIJD_INTERVAL_SENSOREN   /* Time ESP32 will go to sleep (in seconds) */
 
 RTC_DATA_ATTR int bootCount = 0;
-RTC_DATA_ATTR int loopCount = 0;
+// RTC_DATA_ATTR int loopCount = 0;
+boolean loopSwitch;
 
 String deepSleepSchakelaar = DEEP_SLEEP_ON;
 String deepSleepWakeUpReason = "";
@@ -392,6 +393,7 @@ void setup() {
   timer = millis();
   waterTimer = millis();
   panicButtonDebounceTimer = millis();
+  loopSwitch = LOW;
 
   if (deepSleepSchakelaar == DEEP_SLEEP_ON) {
     delay(1000); //Take some time to open up the Serial Monitor
@@ -550,8 +552,8 @@ void loop() {
   }
   
   if (deepSleepSchakelaar == DEEP_SLEEP_ON) {
-    if (loopCount < bootCount) {
-      ++loopCount;
+    if (loopSwitch == LOW) {
+      loopSwitch = HIGH;
       if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_TIME) {
         TRACE();
         DUMP(huidigeMillis);
