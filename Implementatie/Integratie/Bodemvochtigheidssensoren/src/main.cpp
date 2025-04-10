@@ -8,6 +8,10 @@
 
   // DEEP SLEEP met behulp van EXT0: https://www.programmingelectronics.com/external-wake-up-esp32/ (31/03/2025)
 
+  // I2C/accelerometer: https://github.com/DFRobot/DFRobot_LIS
+    // accelerometer orientatie: https://github.com/DFRobot/DFRobot_LIS/blob/master/examples/LIS2DW12/orientation/orientation.ino
+  
+
 /**！
  * @file activityDetect.ino
  * @brief Motion detection, can detect whether the module is moving
