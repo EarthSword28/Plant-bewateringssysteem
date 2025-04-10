@@ -89,7 +89,7 @@ String waarschuwing = WAARSCHUWING_OK;
 #define BUTTON_PIN_BITMASK(GPIO) (1ULL << GPIO)  // 2 ^ GPIO_NUMBER in hex
 #define WAKEUP_GPIO GPIO_NUM_27
 
-#define uS_TO_S_FACTOR 1000                     /* Conversion factor for micro seconds to seconds */
+#define uS_TO_mS_FACTOR 1000                     /* Conversion factor for micro seconds to milli seconds */
 #define TIME_TO_SLEEP  TIJD_INTERVAL_SENSOREN   /* Time ESP32 will go to sleep (in seconds) */
 
 RTC_DATA_ATTR int bootCount = 0;
@@ -416,7 +416,7 @@ void setup() {
     First we configure the wake up source
     We set our ESP32 to wake up every x seconds
     */
-    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_mS_FACTOR);
     Serial.println("Setup ESP32 to sleep for every " + String(TIME_TO_SLEEP) +
     " Seconds");
   }
@@ -442,7 +442,7 @@ void setup() {
                     e16_g  /<±16g>/
   */
   acce.setRange(DFRobot_LIS2DW12::e2_g);
-  
+
   /**！
      Filter settings:
             eLPF(Low pass filter)
