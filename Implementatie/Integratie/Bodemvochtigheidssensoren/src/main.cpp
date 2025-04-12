@@ -70,6 +70,7 @@ DallasTemperature sensors(&oneWire);
 
 
 // DONE: Variabelen om wachttijd tussen inlezen sensoren te kunnen regelen
+unsigned long sleepTimer = 0;
 unsigned long timer = 0;
 unsigned long panicButtonDebounceTimer = 0;
 
@@ -141,6 +142,16 @@ void get_wakeup_reason() {
     Serial.printf("Wakeup was not caused by deep sleep: %d\n",wakeup_reason);
     deepSleepWakeUpReason = DEEP_SLEEP_WAKE_UP_UNDEFINED;
   }
+}
+
+int get_sleep_time(int currentTime) {
+  Serial.println("Going to sleep now for:");
+  Serial.print(TIJD_INTERVAL_SENSOREN);
+  Serial.print(" - ");
+  Serial.print(currentTime);
+  Serial.print(" = ");
+  Serial.println(TIJD_INTERVAL_SENSOREN - currentTime);
+  return (TIJD_INTERVAL_SENSOREN - currentTime);
 }
 
 void acce_setup() {
@@ -530,7 +541,7 @@ void setup() {
     First we configure the wake up source
     We set our ESP32 to wake up every x seconds
     */
-    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_mS_FACTOR);
+    // esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_mS_FACTOR);
     Serial.println("Setup ESP32 to sleep for every " + String(TIME_TO_SLEEP) +
     " Seconds");
   }
@@ -562,9 +573,9 @@ void setup() {
 void loop() {
   // We hebben huidige millis nodig om de verschillende processen te controleren (water geven / stoppen)
   long huidigeMillis = millis();
-  huidigeOrientatie = acce.getOrientation();
 
   if (I2C_SCHAKELAAR == HIGH) {
+    huidigeOrientatie = acce.getOrientation();
     if (huidigeOrientatie == STANDAARD_ORIENTATIE) {
       waarschuwing = WAARSCHUWING_OK;
     }
@@ -588,8 +599,8 @@ void loop() {
       }
     }
     else if (waterStatus == GEEN_WATER_GEVEN) {
-      Serial.println("Going to sleep now");
-      Serial.println(millis());
+      sleepTimer = get_sleep_time(huidigeMillis);
+      esp_sleep_enable_timer_wakeup(sleepTimer * uS_TO_mS_FACTOR);
       delay(1000);
       Serial.flush(); 
       esp_deep_sleep_start();
