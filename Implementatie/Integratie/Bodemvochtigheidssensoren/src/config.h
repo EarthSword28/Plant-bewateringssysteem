@@ -74,6 +74,7 @@ const int CAPACITIEVE_SENSOR_NAT_INTERVAL_MAX = 2463;
 
 // DEBUG
 // const int TRACE_SCHAKELAAR = 1;  // schakel alle trace-commando's aan(1)/uit(0): Dit werkt alleen als het in het main.cpp bestand staat, niet als het in het config bestand staat.
+const bool I2C_SCHAKELAAR = LOW;   // Schakel de I2C verbinding in(HIGH)/uit(LOW)
 
 // MOCK
 const bool MOCK_SCHAKELAAR = LOW;   // schakel alle mock waarden aan(HIGH)/uit(LOW)
