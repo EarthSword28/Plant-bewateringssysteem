@@ -58,7 +58,7 @@ int huidigeOrientatie = 0;
 
 #define ONE_WIRE_BUS 4                   // temperatuur sensor
 
-#define PANIC_BUTTON 27                   // gebruik de ingebouwde knop als de panic button
+#define PANIC_BUTTON 25                   // gebruik GPIO 25 als de panic button
 
 #define RELAY_MODULE 17                   // de relay voor de pomp
  
@@ -84,7 +84,7 @@ boolean pompSchakelaar;
 
 boolean panicButtonSchakelaar;
 
-String waarschuwing = WAARSCHUWING_OK;
+String waarschuwing = WAARSCHUWING_INTIALISATIE;
 
 /*
   placeholder source
@@ -92,7 +92,7 @@ String waarschuwing = WAARSCHUWING_OK;
 #include <driver/rtc_io.h>
 
 #define BUTTON_PIN_BITMASK(GPIO) (1ULL << GPIO)  // 2 ^ GPIO_NUMBER in hex
-#define WAKEUP_GPIO GPIO_NUM_27
+#define WAKEUP_GPIO GPIO_NUM_25
 
 #define uS_TO_mS_FACTOR 1000                     /* Conversion factor for micro seconds to milli seconds */
 #define TIME_TO_SLEEP  TIJD_INTERVAL_SENSOREN   /* Time ESP32 will go to sleep (in seconds) */
@@ -530,12 +530,12 @@ void setup() {
     //Print the wakeup reason for ESP32
     get_wakeup_reason();
 
-    esp_sleep_enable_ext0_wakeup((gpio_num_t)WAKEUP_GPIO, 0);  //1 = High, 0 = Low
+    esp_sleep_enable_ext0_wakeup((gpio_num_t)WAKEUP_GPIO, 1);  //1 = High, 0 = Low
     // Configure pullup/downs via RTCIO to tie wakeup pins to inactive level during deepsleep.
     // EXT0 resides in the same power domain (RTC_PERIPH) as the RTC IO pullup/downs.
     // No need to keep that power domain explicitly, unlike EXT1.
-    rtc_gpio_pullup_en(WAKEUP_GPIO);
-    rtc_gpio_pulldown_dis(WAKEUP_GPIO);
+    rtc_gpio_pullup_dis(WAKEUP_GPIO);
+    rtc_gpio_pulldown_en(WAKEUP_GPIO);
 
     /*
     First we configure the wake up source
@@ -600,7 +600,12 @@ void loop() {
     }
     else if (waterStatus == GEEN_WATER_GEVEN) {
       sleepTimer = get_sleep_time(huidigeMillis);
-      esp_sleep_enable_timer_wakeup(sleepTimer * uS_TO_mS_FACTOR);
+      if (sleepTimer <= 0) {
+        esp_sleep_enable_timer_wakeup(TIJD_INTERVAL_SENSOREN * uS_TO_mS_FACTOR);
+      }
+      else {
+        esp_sleep_enable_timer_wakeup(sleepTimer * uS_TO_mS_FACTOR);
+      }
       delay(1000);
       Serial.flush(); 
       esp_deep_sleep_start();

@@ -37,7 +37,7 @@ const int UP_Y = DFRobot_LIS2DW12::eYUp;
 const int DOWN_Z = DFRobot_LIS2DW12::eZDown;
 const int UP_Z = DFRobot_LIS2DW12::eZUp; 
 */
-const int STANDAARD_ORIENTATIE = DFRobot_LIS2DW12::eZUp;
+const int STANDAARD_ORIENTATIE = DFRobot_LIS2DW12::eYUp;
 
 // DONE: Duurtijden water geven (in milliseconden)
 const int WATER_GEVEN_INTERVAL_INACTIEF = 0;
@@ -74,7 +74,8 @@ const int CAPACITIEVE_SENSOR_NAT_INTERVAL_MAX = 2463;
 
 // DEBUG
 // const int TRACE_SCHAKELAAR = 1;  // schakel alle trace-commando's aan(1)/uit(0): Dit werkt alleen als het in het main.cpp bestand staat, niet als het in het config bestand staat.
-const bool I2C_SCHAKELAAR = LOW;   // Schakel de I2C verbinding in(HIGH)/uit(LOW)
+const bool I2C_SCHAKELAAR = LOW;   // Schakel de I2C verbinding in(HIGH)/uit(LOW)   Toegevoegd omdat de accelerometer plots stopte met werken
+const String WAARSCHUWING_INTIALISATIE = "OK";    // wat is de default waarde van de waarschuwings constante ("GEVAAR"/"OK"), nuttig bij debuggen
 
 // MOCK
 const bool MOCK_SCHAKELAAR = LOW;   // schakel alle mock waarden aan(HIGH)/uit(LOW)
