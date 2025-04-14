@@ -1,5 +1,5 @@
 // DONE: Wachttijd tussen 2 opeenvolgende inlezingen van sensoren (in milliseconden)
-const int TIJD_INTERVAL_SENSOREN = 30000;
+const int TIJD_INTERVAL_SENSOREN = 5000;
 const int PANIC_BUTTON_DEBOUNCE = 500;
 
 // DONE: Temperatuur schakelwaarden (in °C )
@@ -78,7 +78,7 @@ const bool I2C_SCHAKELAAR = LOW;   // Schakel de I2C verbinding in(HIGH)/uit(LOW
 const String WAARSCHUWING_INTIALISATIE = "OK";    // wat is de default waarde van de waarschuwings constante ("GEVAAR"/"OK"), nuttig bij debuggen
 
 // MOCK
-const bool MOCK_SCHAKELAAR = LOW;   // schakel alle mock waarden aan(HIGH)/uit(LOW)
+const bool MOCK_SCHAKELAAR = HIGH;   // schakel alle mock waarden aan(HIGH)/uit(LOW)
 
 const bool CAPACITIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR = HIGH;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
 const int CAPACITIEVE_SENSOR_MOCK_WAARDE = 0;

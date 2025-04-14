@@ -70,7 +70,6 @@ DallasTemperature sensors(&oneWire);
 
 
 // DONE: Variabelen om wachttijd tussen inlezen sensoren te kunnen regelen
-unsigned long sleepTimer = 0;
 unsigned long timer = 0;
 unsigned long panicButtonDebounceTimer = 0;
 
@@ -142,16 +141,6 @@ void get_wakeup_reason() {
     Serial.printf("Wakeup was not caused by deep sleep: %d\n",wakeup_reason);
     deepSleepWakeUpReason = DEEP_SLEEP_WAKE_UP_UNDEFINED;
   }
-}
-
-int get_sleep_time(int currentTime) {
-  Serial.println("Going to sleep now for:");
-  Serial.print(TIJD_INTERVAL_SENSOREN);
-  Serial.print(" - ");
-  Serial.print(currentTime);
-  Serial.print(" = ");
-  Serial.println(TIJD_INTERVAL_SENSOREN - currentTime);
-  return (TIJD_INTERVAL_SENSOREN - currentTime);
 }
 
 void acce_setup() {
@@ -599,13 +588,9 @@ void loop() {
       }
     }
     else if (waterStatus == GEEN_WATER_GEVEN) {
-      sleepTimer = get_sleep_time(huidigeMillis);
-      if (sleepTimer <= 0) {
-        esp_sleep_enable_timer_wakeup(TIJD_INTERVAL_SENSOREN * uS_TO_mS_FACTOR);
-      }
-      else {
-        esp_sleep_enable_timer_wakeup(sleepTimer * uS_TO_mS_FACTOR);
-      }
+      Serial.print("Going to sleep now for: ");
+      Serial.println(TIJD_INTERVAL_SENSOREN);
+      esp_sleep_enable_timer_wakeup(TIJD_INTERVAL_SENSOREN * uS_TO_mS_FACTOR);
       delay(1000);
       Serial.flush(); 
       esp_deep_sleep_start();
@@ -629,7 +614,7 @@ void loop() {
       BREAK();
     }
   }
-  else if (panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == LOW) {
+  else if (panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == HIGH) {
     panic_button();
   }
   else if (panicButtonSchakelaar == HIGH && huidigeMillis >= panicButtonDebounceTimer) {
