@@ -610,14 +610,10 @@ void loop() {
   else if (waterStatus == GEEN_WATER_GEVEN) {
     activate_deep_sleep(huidigeMillis);
   }
-
-  // DONE: Controleer of de waterpomp uitgezet moet worden en roep functie zetWaterpompUit() aan indien nodig
-  if (waterStatus == WATER_GEVEN) {
-    if (huidigeMillis >= waterTimer) {
+  else if (huidigeMillis >= waterTimer) {
       zetWaterpompUit();
       BREAK();
     }
-  }
   // else if (panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == HIGH) {
   //   panic_button();
   // }
