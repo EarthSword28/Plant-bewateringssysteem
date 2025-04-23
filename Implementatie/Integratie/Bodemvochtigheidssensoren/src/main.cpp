@@ -98,6 +98,7 @@ String waarschuwing = WAARSCHUWING_INTIALISATIE;
 #define TIME_TO_SLEEP  TIJD_INTERVAL_SENSOREN   /* Time ESP32 will go to sleep (in seconds) */
 
 RTC_DATA_ATTR int bootCount = 0;
+RTC_DATA_ATTR int standaardOrientatie = STANDAARD_ORIENTATIE;
 // RTC_DATA_ATTR int loopCount = 0;
 boolean loopSwitch;
 
@@ -136,7 +137,7 @@ void get_wakeup_reason() {
   }
   else if (bootCount == 1) {
     Serial.println("Startup");
-    deepSleepWakeUpReason = DEEP_SLEEP_WAKE_UP_TIME;
+    deepSleepWakeUpReason = DEEP_SLEEP_WAKE_UP_START;
   }
   else {
     Serial.printf("Wakeup was not caused by deep sleep: %d\n",wakeup_reason);
@@ -583,18 +584,23 @@ void loop() {
 
   if (I2C_SCHAKELAAR == HIGH) {
     huidigeOrientatie = acce.getOrientation();
-    if (huidigeOrientatie == STANDAARD_ORIENTATIE) {
-      waarschuwing = WAARSCHUWING_OK;
+    if (deepSleepSchakelaar == DEEP_SLEEP_ON && deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_START) {
+      standaardOrientatie = huidigeOrientatie;
     }
     else {
-      waarschuwing = WAARSCHUWING_GEVAAR;
+      if (huidigeOrientatie == standaardOrientatie) {
+        waarschuwing = WAARSCHUWING_OK;
+      }
+      else {
+        waarschuwing = WAARSCHUWING_GEVAAR;
+      }
     }
   }
   
   if (deepSleepSchakelaar == DEEP_SLEEP_ON) {
     if (loopSwitch == LOW) {
       loopSwitch = HIGH;
-      if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_TIME) {
+      if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_TIME || deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_START) {
         TRACE();
         DUMP(huidigeMillis);
         leesSensorenEnGeefWaterIndienNodig();
