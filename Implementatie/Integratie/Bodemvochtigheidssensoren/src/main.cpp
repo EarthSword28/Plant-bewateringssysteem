@@ -592,7 +592,7 @@ void loop() {
       }
     }
   }
-  
+
   // DONE: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
   if (sensorsReadSwitch == LOW) {
     sensorsReadSwitch = HIGH;
