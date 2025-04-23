@@ -18,8 +18,8 @@ const String WATER_GEVEN = "WATER GEVEN";
 
 // Deep Sleep
   // Deep sleep schakelaar, nuttig voor te debuggen om te kijken hoe functies werken zonder in deep sleep te gaan
-const String DEEP_SLEEP_ON = "DEEP SLEEP AAN";
-const String DEEP_SLEEP_OFF = "DEEP SLEEP UIT";
+// const String DEEP_SLEEP_ON = "DEEP SLEEP AAN";
+// const String DEEP_SLEEP_OFF = "DEEP SLEEP UIT";
 
   // Deep Sleep mogelijkheden
 const String DEEP_SLEEP_WAKE_UP_START = "STARTUP";

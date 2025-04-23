@@ -102,7 +102,6 @@ RTC_DATA_ATTR int standaardOrientatie = STANDAARD_ORIENTATIE;
 // RTC_DATA_ATTR int loopCount = 0;
 boolean loopSwitch;
 
-String deepSleepSchakelaar = DEEP_SLEEP_ON;
 String deepSleepWakeUpReason = "";
 
 /*
@@ -528,31 +527,28 @@ void setup() {
   panicButtonDebounceTimer = millis();
   loopSwitch = LOW;
 
-  if (deepSleepSchakelaar == DEEP_SLEEP_ON) {
-    delay(1000); //Take some time to open up the Serial Monitor
+  delay(1000); //Take some time to open up the Serial Monitor
 
-    //Increment boot number and print it every reboot
-    ++bootCount;
-    Serial.println("Boot number: " + String(bootCount));
+  //Increment boot number and print it every reboot
+  ++bootCount;
+  Serial.println("Boot number: " + String(bootCount));
 
-    //Print the wakeup reason for ESP32
-    get_wakeup_reason();
+  //Print the wakeup reason for ESP32
+  get_wakeup_reason();
 
-    esp_sleep_enable_ext0_wakeup((gpio_num_t)WAKEUP_GPIO, 1);  //1 = High, 0 = Low
-    // Configure pullup/downs via RTCIO to tie wakeup pins to inactive level during deepsleep.
-    // EXT0 resides in the same power domain (RTC_PERIPH) as the RTC IO pullup/downs.
-    // No need to keep that power domain explicitly, unlike EXT1.
-    rtc_gpio_pullup_dis(WAKEUP_GPIO);
-    rtc_gpio_pulldown_en(WAKEUP_GPIO);
+  esp_sleep_enable_ext0_wakeup((gpio_num_t)WAKEUP_GPIO, 1);  //1 = High, 0 = Low
+  // Configure pullup/downs via RTCIO to tie wakeup pins to inactive level during deepsleep.
+  // EXT0 resides in the same power domain (RTC_PERIPH) as the RTC IO pullup/downs.
+  // No need to keep that power domain explicitly, unlike EXT1.
+  rtc_gpio_pullup_dis(WAKEUP_GPIO);
+  rtc_gpio_pulldown_en(WAKEUP_GPIO);
 
-    /*
-    First we configure the wake up source
-    We set our ESP32 to wake up every x seconds
-    */
-    // esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_mS_FACTOR);
-    Serial.println("Setup ESP32 to sleep for every " + String(TIME_TO_SLEEP) +
-    " Seconds");
-  }
+  /*
+  First we configure the wake up source
+  We set our ESP32 to wake up every x seconds
+  */
+  // esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_mS_FACTOR);
+  Serial.println("Setup ESP32 to sleep for every " + String(TIME_TO_SLEEP) + " Seconds");
 
   // Start up the sensor library
   sensors.begin(); 
@@ -584,7 +580,7 @@ void loop() {
 
   if (I2C_SCHAKELAAR == HIGH) {
     huidigeOrientatie = acce.getOrientation();
-    if (deepSleepSchakelaar == DEEP_SLEEP_ON && deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_START) {
+    if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_START) {
       standaardOrientatie = huidigeOrientatie;
     }
     else {
@@ -597,32 +593,22 @@ void loop() {
     }
   }
   
-  if (deepSleepSchakelaar == DEEP_SLEEP_ON) {
-    if (loopSwitch == LOW) {
-      loopSwitch = HIGH;
-      if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_TIME || deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_START) {
-        TRACE();
-        DUMP(huidigeMillis);
-        leesSensorenEnGeefWaterIndienNodig();
-        BREAK();
-      }
-      else if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_PANIC_BUTTON) {
-        TRACE();
-        panic_button();
-      }
+  // DONE: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
+  if (loopSwitch == LOW) {
+    loopSwitch = HIGH;
+    if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_TIME || deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_START) {
+      TRACE();
+      DUMP(huidigeMillis);
+      leesSensorenEnGeefWaterIndienNodig();
+      BREAK();
     }
-    else if (waterStatus == GEEN_WATER_GEVEN) {
-      activate_deep_sleep(huidigeMillis);
+    else if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_PANIC_BUTTON) {
+      TRACE();
+      panic_button();
     }
   }
-  // DONE: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
-  else if (waterStatus != WATER_GEVEN && huidigeMillis >= timer) {
-    TRACE();
-    timer = huidigeMillis + TIJD_INTERVAL_SENSOREN;
-    DUMP(huidigeMillis);
-    DUMP(timer);
-    leesSensorenEnGeefWaterIndienNodig();
-    BREAK();
+  else if (waterStatus == GEEN_WATER_GEVEN) {
+    activate_deep_sleep(huidigeMillis);
   }
   
   // DONE: Controleer of de waterpomp uitgezet moet worden en roep functie zetWaterpompUit() aan indien nodig
