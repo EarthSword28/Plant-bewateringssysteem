@@ -155,7 +155,7 @@ void activate_deep_sleep(int currentTime) {
   Serial.print("Going to sleep now for: ");
   Serial.println(sleepTimer);
   esp_sleep_enable_timer_wakeup(sleepTimer * uS_TO_mS_FACTOR);
-  delay(1000);
+  delay(100);
   Serial.flush(); 
   esp_deep_sleep_start();
   Serial.println("This will never be printed");
