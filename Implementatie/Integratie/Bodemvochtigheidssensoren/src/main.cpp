@@ -611,9 +611,9 @@ void loop() {
     activate_deep_sleep(huidigeMillis);
   }
   else if (huidigeMillis >= waterTimer) {
-      zetWaterpompUit();
-      BREAK();
-    }
+    zetWaterpompUit();
+    BREAK();
+  }
   // else if (panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == HIGH) {
   //   panic_button();
   // }
