@@ -100,7 +100,7 @@ String waarschuwing = WAARSCHUWING_INTIALISATIE;
 RTC_DATA_ATTR int bootCount = 0;
 RTC_DATA_ATTR int standaardOrientatie = STANDAARD_ORIENTATIE;
 // RTC_DATA_ATTR int loopCount = 0;
-boolean loopSwitch;
+boolean sensorsReadSwitch;
 
 String deepSleepWakeUpReason = "";
 
@@ -525,7 +525,7 @@ void setup() {
   timer = millis();
   waterTimer = millis();
   panicButtonDebounceTimer = millis();
-  loopSwitch = LOW;
+  sensorsReadSwitch = LOW;
 
   delay(1000); //Take some time to open up the Serial Monitor
 
@@ -594,8 +594,8 @@ void loop() {
   }
   
   // DONE: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
-  if (loopSwitch == LOW) {
-    loopSwitch = HIGH;
+  if (sensorsReadSwitch == LOW) {
+    sensorsReadSwitch = HIGH;
     if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_TIME || deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_START) {
       TRACE();
       DUMP(huidigeMillis);
