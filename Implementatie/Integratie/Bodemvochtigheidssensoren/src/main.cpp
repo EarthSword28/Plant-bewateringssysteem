@@ -71,6 +71,7 @@ DallasTemperature sensors(&oneWire);
 
 // DONE: Variabelen om wachttijd tussen inlezen sensoren te kunnen regelen
 unsigned long timer = 0;
+unsigned long sleepTimer = 0;
 unsigned long panicButtonDebounceTimer = 0;
 
 // DONE: Variabelen om duurtijd van water geven te kunnen regelen
@@ -141,6 +142,23 @@ void get_wakeup_reason() {
     Serial.printf("Wakeup was not caused by deep sleep: %d\n",wakeup_reason);
     deepSleepWakeUpReason = DEEP_SLEEP_WAKE_UP_UNDEFINED;
   }
+}
+
+void activate_deep_sleep(int currentTime) {
+  TRACE();
+  if (currentTime < TIJD_INTERVAL_SENSOREN) {
+    sleepTimer = TIJD_INTERVAL_SENSOREN - currentTime;
+  }
+  else {
+    sleepTimer = TIJD_INTERVAL_SENSOREN;
+  }
+  Serial.print("Going to sleep now for: ");
+  Serial.println(sleepTimer);
+  esp_sleep_enable_timer_wakeup(sleepTimer * uS_TO_mS_FACTOR);
+  delay(1000);
+  Serial.flush(); 
+  esp_deep_sleep_start();
+  Serial.println("This will never be printed");
 }
 
 void acce_setup() {
@@ -588,13 +606,7 @@ void loop() {
       }
     }
     else if (waterStatus == GEEN_WATER_GEVEN) {
-      Serial.print("Going to sleep now for: ");
-      Serial.println(TIJD_INTERVAL_SENSOREN);
-      esp_sleep_enable_timer_wakeup(TIJD_INTERVAL_SENSOREN * uS_TO_mS_FACTOR);
-      delay(1000);
-      Serial.flush(); 
-      esp_deep_sleep_start();
-      Serial.println("This will never be printed");
+      activate_deep_sleep(huidigeMillis);
     }
   }
   // DONE: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
