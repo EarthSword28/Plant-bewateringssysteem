@@ -48,6 +48,11 @@ int huidigeOrientatie = 0;
 #include <DallasTemperature.h>
 
 #include <config.h>
+#include <security.h>
+
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <time.h>
 
 #define ARDUINOTRACE_ENABLE 1  // schakel alle trace-commando's aan(1)/uit(0)
 #include <ArduinoTrace.h>
@@ -103,6 +108,89 @@ RTC_DATA_ATTR int standaardOrientatie = STANDAARD_ORIENTATIE;
 boolean dataRedSwitch;
 
 String deepSleepWakeUpReason = "";
+
+// WIFI
+  // NTP = Network Time Protocol
+const char *NTP_SERVER = "pool.ntp.org";
+const long GMT_OFFSET_SEC = 0; // 19800;
+const int DAYLIGHT_OFFSET_SEC = 0;
+
+  // Google Apps Script URL
+const String GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/";
+
+void initWifi() {
+  Serial.print("Connecting to WiFi: ");
+  Serial.println(WIFI_SSID);
+  Serial.flush();
+
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+}
+
+void setTimezone(String timezone) {
+  Serial.printf("Setting Timezone to %s\n", timezone.c_str());
+  setenv("TZ", timezone.c_str(), 1);
+  //  Now adjust the TZ.  Clock settings are adjusted to show the new local time
+  tzset();
+}
+
+String getCurrentDateAndTime() {
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo))   {
+    Serial.println("Failed to obtain time");
+    return "";
+  }
+
+  char timeStringBuff[50]; // 50 chars should be enough
+  //strftime(timeStringBuff, sizeof(timeStringBuff), "%A, %B %d %Y %H:%M:%S", &timeinfo);
+  strftime(timeStringBuff, sizeof(timeStringBuff), "%d-%m-%Y_%H:%M:%S", &timeinfo);
+
+  String asString(timeStringBuff);
+  asString.replace(" ", "-");
+
+  return asString;
+}
+
+void send_data(int dataTemperatuur, String dataResistieveSensor, String dataCapacitieveSensor, String dataBodemvochtigheidFinaal, int dataWaterTijd, int dataOrientatie) {
+  if (WiFi.status() == WL_CONNECTED) {
+    // Get current date and time
+    String currentDateAndTime = getCurrentDateAndTime();
+    Serial.print("Current date and time: ");
+    Serial.println(currentDateAndTime);
+
+    // Create URL with parameters to call Google Apps Script
+    String urlFinal = GOOGLE_APPS_SCRIPT_URL + GOOGLE_SCRIPT_DEPLOYMENT_ID + "/exec?" + 
+        "datum_tijdstip=" + currentDateAndTime + 
+        "&temperatuur=" + dataTemperatuur + 
+        "&resistieve_sensor=" + dataResistieveSensor +
+        "&capacitieve_sensor=" + dataCapacitieveSensor +
+        "&bodemvochtigheid_finaal=" + dataBodemvochtigheidFinaal +
+        "&water_tijd=" + dataWaterTijd + 
+        "&orientatie=" + dataOrientatie;
+
+    Serial.print("POST data to spreadsheet: ");
+    Serial.println(urlFinal);
+
+    // Send HTTP request and get status code
+    HTTPClient http;
+    http.begin(urlFinal.c_str());
+    // http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
+    int httpCode = http.GET();
+    Serial.print("HTTP Status Code: ");
+    Serial.println(httpCode);
+
+    // Get response from HTTP request
+    String payload;
+    if (httpCode > 0) {
+      payload = http.getString();
+      Serial.println("Payload: " + payload);
+    }
+    http.end();
+  }
+}
 
 /*
 Method to print the reason by which ESP32
@@ -491,8 +579,10 @@ void leesSensorenEnGeefWaterIndienNodig() {
   if (categorie == VOCHTIGHEID_DROOG) {
     if (temperatuur > MAX_TEMPERATUUR) {
       zetWaterpompAan(WATER_GEVEN_INTERVAL_LANG);
+      send_data(temperatuur, categorieResistieveBVH, categorieCapacitieveBVH, categorie, WATER_GEVEN_INTERVAL_LANG, huidigeOrientatie);
     }
     else if (temperatuur > MIN_TEMPERATUUR) {
+      send_data(temperatuur, categorieResistieveBVH, categorieCapacitieveBVH, categorie, WATER_GEVEN_INTERVAL_KORT, huidigeOrientatie);
       zetWaterpompAan(WATER_GEVEN_INTERVAL_KORT);
     }
   }
@@ -572,6 +662,13 @@ void setup() {
     }
   }
   delay(100);
+
+  // connect to WiFi
+  initWifi();
+
+  // Init NTP and set timezone to Berlin
+  configTime(GMT_OFFSET_SEC, DAYLIGHT_OFFSET_SEC, NTP_SERVER);
+  setTimezone("CET-1CEST,M3.5.0,M10.5.0/3");
 }
 
 void loop() {
