@@ -618,10 +618,10 @@ void loop() {
       BREAK();
     }
   }
-  else if (panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == HIGH) {
-    panic_button();
-  }
-  else if (panicButtonSchakelaar == HIGH && huidigeMillis >= panicButtonDebounceTimer) {
-    panicButtonSchakelaar = LOW;
-  }
+  // else if (panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == HIGH) {
+  //   panic_button();
+  // }
+  // else if (panicButtonSchakelaar == HIGH && huidigeMillis >= panicButtonDebounceTimer) {
+  //   panicButtonSchakelaar = LOW;
+  // }
 }
