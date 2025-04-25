@@ -2,6 +2,5 @@
   "git.promptToSaveFilesBeforeCommit": "staged",
   "git.promptToSaveFilesBeforeStash": "staged",
   "git.openRepositoryInParentFolders": "always",
-  "git.showCommitInput": false,
-  "C_Cpp.codeAnalysis.runAutomatically": false
+  "git.showCommitInput": false
 }
