@@ -677,7 +677,6 @@ void loop() {
 
   if (I2C_SCHAKELAAR == HIGH) {
     huidigeOrientatie = acce.getOrientation();
-    DUMP(huidigeOrientatie);
     if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_START) {
       standaardOrientatie = huidigeOrientatie;
     }
@@ -689,6 +688,8 @@ void loop() {
         waarschuwing = WAARSCHUWING_GEVAAR;
       }
     }
+    DUMP(huidigeOrientatie);
+    DUMP(standaardOrientatie);
   }
 
   // DONE: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
