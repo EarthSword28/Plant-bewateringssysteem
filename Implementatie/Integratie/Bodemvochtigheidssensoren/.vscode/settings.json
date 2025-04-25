@@ -1,6 +1,0 @@
-{
-  "git.promptToSaveFilesBeforeCommit": "staged",
-  "git.promptToSaveFilesBeforeStash": "staged",
-  "git.openRepositoryInParentFolders": "always",
-  "git.showCommitInput": false
-}

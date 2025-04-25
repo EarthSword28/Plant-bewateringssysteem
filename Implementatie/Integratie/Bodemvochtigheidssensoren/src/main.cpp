@@ -30,7 +30,7 @@
  * @url https://github.com/DFRobot/DFRobot_LIS
  */
 
- #include <DFRobot_LIS2DW12.h>
+#include <DFRobot_LIS2DW12.h>
 
 //When using I2C communication, use the following program to construct an object by DFRobot_LIS2DW12_I2C
 /*!

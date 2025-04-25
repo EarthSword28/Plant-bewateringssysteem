@@ -26,7 +26,7 @@
 #define LIS2DW12_I2C_ADDR  (0x19)  ///<LIS2DW12 IIC address
 #define IIS2DLPC_I2C_ADDR  (0x19)  ///<IIS2DLPC IIC address
 
-#define ERR_OK              0      ///<ok
+// #define ERR_OK              0      ///<ok
 #define ERR_DATA_BUS       -1      ///<error in data bus
 #define ERR_IC_VERSION     -2      ///<chip version mismatch
 
