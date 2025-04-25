@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // BRONNEN
   // de code voor de temperatuursensor: https://canvas.kdg.be/courses/49816/pages/digitale-temperatuursensor-ds18b20-waterproof?module_item_id=1126867 (01/03/2025)
   // ArduinoTrace: https://github.com/bblanchon/ArduinoTrace (01/03/2025)
@@ -718,4 +719,23 @@ void loop() {
   // else if (panicButtonSchakelaar == HIGH && huidigeMillis >= panicButtonDebounceTimer) {
   //   panicButtonSchakelaar = LOW;
   // }
+=======
+#include <Arduino.h>
+
+// put function declarations here:
+int myFunction(int, int);
+
+void setup() {
+  // put your setup code here, to run once:
+  int result = myFunction(2, 3);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+}
+
+// put function definitions here:
+int myFunction(int x, int y) {
+  return x + y;
+>>>>>>> 1703200 (1)
 }
