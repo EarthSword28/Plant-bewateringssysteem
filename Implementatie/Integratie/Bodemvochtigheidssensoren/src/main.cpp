@@ -677,6 +677,7 @@ void loop() {
 
   if (I2C_SCHAKELAAR == HIGH) {
     huidigeOrientatie = acce.getOrientation();
+    DUMP(huidigeOrientatie);
     if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_START) {
       standaardOrientatie = huidigeOrientatie;
     }
