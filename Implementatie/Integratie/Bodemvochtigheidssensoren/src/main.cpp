@@ -162,7 +162,7 @@ String getCurrentDateAndTime() {
   return asString;
 }
 
-void send_data(int dataTemperatuur, String dataResistieveSensor, String dataCapacitieveSensor, String dataBodemvochtigheidFinaal, int dataWaterTijd, String dataOrientatie) {
+void sendData(int dataTemperatuur, String dataResistieveSensor, String dataCapacitieveSensor, String dataBodemvochtigheidFinaal, int dataWaterTijd, String dataOrientatie) {
   if (WiFi.status() == WL_CONNECTED) {
     // Get current date and time
     String currentDateAndTime = getCurrentDateAndTime();
@@ -204,7 +204,7 @@ void send_data(int dataTemperatuur, String dataResistieveSensor, String dataCapa
 Method to print the reason by which ESP32
 has been awaken from sleep
 */
-void get_wakeup_reason() {
+void getWakeupReason() {
   TRACE();
   esp_sleep_wakeup_cause_t wakeup_reason;
 
@@ -240,7 +240,7 @@ void get_wakeup_reason() {
   }
 }
 
-void activate_deep_sleep(int currentTime) {
+void activateDeepSleep(int currentTime) {
   TRACE();
   Serial.println("Preparing to sleep");
 
@@ -281,12 +281,12 @@ void activate_deep_sleep(int currentTime) {
   Serial.println("This will never be printed");
 }
 
-void acce_setup() {
+void acceSetup() {
   Serial.print("chip id : ");
   Serial.println(acce.getID(),HEX);
   //Software reset
   acce.softReset();
-  
+
   /**！
      Set the sensor measurement range:
                     e2_g   /<±2g>/
@@ -302,7 +302,7 @@ void acce_setup() {
             eHPF(High pass filter)
   */
   acce.setFilterPath(DFRobot_LIS2DW12::eLPF);
-  
+
   /**！
      Set bandwidth：
         eRateDiv_2  ,/<Rate/2 (up to Rate = 800 Hz, 400 Hz when Rate = 1600 Hz)>/
@@ -311,7 +311,7 @@ void acce_setup() {
         eRateDiv_20 ,/< Rate/20 (HP/LP)>/
   */
   acce.setFilterBandwidth(DFRobot_LIS2DW12::eRateDiv_4);
-  
+
   /**
       Wake-up duration: when using the detection mode of eDetectAct in the setActMode() function, it will collect data
     at a normal rate after the chip is awakened. Then after a period of time, the chip will continue to hibernate, collecting data at a frequency of 12.5hz.
@@ -326,11 +326,11 @@ void acce_setup() {
     |------------------------------------------------------------------------------------------------------------------------|
     */
   acce.setWakeUpDur(/*dur = */2);
-  
+
   //Set wakeup threshold, when the acceleration change exceeds this value, the eWakeUp event will be triggered, unit:mg
   //The value is within the range.
   acce.setWakeUpThreshold(/*threshold = */0.2);
-  
+
   /**！
     Set power mode:
         eHighPerformance_14bit         /<High-Performance Mode,14-bit resolution>/
@@ -353,7 +353,7 @@ void acce_setup() {
         eSingleLowPwrLowNoise1_12bit   /<Single data conversion on demand mode,Low-Power Mode 1(12-bit resolution),Low-noise enabled>/
   */
   acce.setPowerMode(DFRobot_LIS2DW12::eContLowPwrLowNoise1_12bit);
-  
+
   /**！
      Set the mode of motion detection:
     eNoDetection       /<No detection>/
@@ -363,7 +363,7 @@ void acce_setup() {
                           and power mode, continuously measuring the data at normal frequency.>/
   */
   acce.setActMode(DFRobot_LIS2DW12::eDetectAct);
-  
+
   /**！
      Set the interrupt source of the int1 pin:
     eDoubleTap(Double click)
@@ -373,7 +373,7 @@ void acce_setup() {
     e6D(Orientation change check)
   */
   acce.setInt1Event(DFRobot_LIS2DW12::eWakeUp);
-  
+
   /**！
      Set the sensor data collection rate:
                 eRate_0hz           /<Measurement off>/
@@ -565,7 +565,7 @@ void zetWaterpompUit() {
   TRACE();
   // DONE: Implementeer code om de pomp uit te zetten
   digitalWrite(RELAY_MODULE, HIGH);
-  
+
   // DONE: Initialiseer de variabelen om de starrtijd en duurtijd van het water geven te regelen
   waterStatus = GEEN_WATER_GEVEN;
   waterGevenTijdsInterval = WATER_GEVEN_INTERVAL_INACTIEF;
@@ -621,14 +621,14 @@ void leesSensorenEnGeefWaterIndienNodig() {
     }
   }
 
-  send_data(temperatuur, categorieResistieveBVH, categorieCapacitieveBVH, categorie, waterGevenTijdsInterval, waarschuwing);
+  sendData(temperatuur, categorieResistieveBVH, categorieCapacitieveBVH, categorie, waterGevenTijdsInterval, waarschuwing);
 
   if (waterGevenTijdsInterval != WATER_GEVEN_INTERVAL_INACTIEF) {
     zetWaterpompAan(waterGevenTijdsInterval);
   }
 }
 
-void panic_button() {
+void panicButton() {
   TRACE();
   panicButtonSchakelaar = HIGH;
   panicButtonDebounceTimer = millis() + PANIC_BUTTON_DEBOUNCE;
@@ -639,7 +639,7 @@ void panic_button() {
 }
 
 // zet alle ongebruikte GPIO pinnen uit, zodat deze geen problemen kunnen veroorzaken
-void protect_GPIOs() {
+void protectGPIOs() {
   int pinList[9] = {2, 13, 14, 0, 26, 15, 35, 34, 12};
   for (int i = 0; i <= 8; i++) {
     pinMode(pinList[i], OUTPUT);
@@ -664,7 +664,7 @@ void setup() {
 
   delay(100);
 
-  protect_GPIOs();
+  protectGPIOs();
 
   waterStatus = GEEN_WATER_GEVEN;
   panicButtonSchakelaar = LOW;
@@ -680,7 +680,7 @@ void setup() {
 
   //Increment boot number and print it every reboot
   Serial.println("Booting...");
-  
+
   esp_reset_reason_t reason = esp_reset_reason();
   Serial.print("Reset reason: ");
   Serial.println(reason);
@@ -692,7 +692,7 @@ void setup() {
   esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_ON);
 
   //Print the wakeup reason for ESP32
-  get_wakeup_reason();
+  getWakeupReason();
 
   esp_sleep_enable_ext0_wakeup((gpio_num_t)WAKEUP_GPIO, 1);  //1 = High, 0 = Low
   // Configure pullup/downs via RTCIO to tie wakeup pins to inactive level during deepsleep.
@@ -717,12 +717,12 @@ void setup() {
       Serial.println("Communication failed, check the connection and I2C address setting when using I2C communication.");
       delay(1000);
     }
-    acce_setup();
+    acceSetup();
   }
   else {
     if (acce.begin()) {
       Serial.println("Succesfull I2C connection");
-      acce_setup();
+      acceSetup();
     }
     else {
       Serial.println("Communication failed, check the connection and I2C address setting when using I2C communication.");
@@ -779,11 +779,11 @@ void loop() {
     }
     else if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_PANIC_BUTTON) {
       TRACE();
-      panic_button();
+      panicButton();
     }
   }
   else if (waterStatus == GEEN_WATER_GEVEN) {
-    activate_deep_sleep(huidigeMillis);
+    activateDeepSleep(huidigeMillis);
   }
   else if (huidigeMillis >= waterTimer) {
     zetWaterpompUit();
