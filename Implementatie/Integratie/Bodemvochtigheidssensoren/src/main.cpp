@@ -54,6 +54,10 @@ int huidigeOrientatie = 0;
 #include <HTTPClient.h>
 #include <time.h>
 
+// deep sleep problemen oplossen
+#include <esp_system.h>
+#include <esp_sleep.h>
+
 #define ARDUINOTRACE_ENABLE 1  // schakel alle trace-commando's aan(1)/uit(0)
 #include <ArduinoTrace.h>
 
@@ -66,6 +70,8 @@ int huidigeOrientatie = 0;
 #define PANIC_BUTTON 25                   // gebruik GPIO 25 als de panic button
 
 #define RELAY_MODULE 17                   // de relay voor de pomp
+
+#define POWER 26        // De power switch voor de sensoren
  
 // Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);    
@@ -123,10 +129,12 @@ void initWifi() {
   Serial.println(WIFI_SSID);
   Serial.flush();
 
+  int wifiPogingen = 0;
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED && wifiPogingen < WIFI_TOEGESTANE_POGINGEN) {
     delay(500);
     Serial.print(".");
+    ++wifiPogingen;
   }
 }
 
@@ -154,7 +162,7 @@ String getCurrentDateAndTime() {
   return asString;
 }
 
-void send_data(int dataTemperatuur, String dataResistieveSensor, String dataCapacitieveSensor, String dataBodemvochtigheidFinaal, int dataWaterTijd, int dataOrientatie) {
+void send_data(int dataTemperatuur, String dataResistieveSensor, String dataCapacitieveSensor, String dataBodemvochtigheidFinaal, int dataWaterTijd, String dataOrientatie) {
   if (WiFi.status() == WL_CONNECTED) {
     // Get current date and time
     String currentDateAndTime = getCurrentDateAndTime();
@@ -234,7 +242,32 @@ void get_wakeup_reason() {
 
 void activate_deep_sleep(int currentTime) {
   TRACE();
-  if (currentTime < TIJD_INTERVAL_SENSOREN) {
+  Serial.println("Preparing to sleep");
+
+  // 1. Zet de accelerometer in power-down mode
+  acce.setDataRate(DFRobot_LIS2DW12::eRate_0hz);
+
+  delay(50);
+
+  // 2. Sluit de I2C bus af
+  Wire.end();
+
+  // 3. Zet SDA en SCL in veilige toestand
+  pinMode(21, INPUT_PULLUP); // SDA pin
+  pinMode(22, INPUT_PULLUP); // SCL pin
+
+  delay(100);
+
+  // deactiveer de WiFi verbinfing
+  WiFi.disconnect(true);
+  WiFi.mode(WIFI_OFF);
+  delay(100);
+
+  digitalWrite(POWER, HIGH);
+
+  delay (50);
+
+  if (currentTime < (TIJD_INTERVAL_SENSOREN - 500)) {
     sleepTimer = TIJD_INTERVAL_SENSOREN - currentTime;
   }
   else {
@@ -243,7 +276,6 @@ void activate_deep_sleep(int currentTime) {
   Serial.print("Going to sleep now for: ");
   Serial.println(sleepTimer);
   esp_sleep_enable_timer_wakeup(sleepTimer * uS_TO_mS_FACTOR);
-  delay(100);
   Serial.flush(); 
   esp_deep_sleep_start();
   Serial.println("This will never be printed");
@@ -511,7 +543,7 @@ void zetWaterpompAan(int duurtijd) {
   TRACE();
   if (waarschuwing == WAARSCHUWING_OK) {
     // DONE: Implementeer code om de pomp aan te zetten
-    digitalWrite(RELAY_MODULE, HIGH);
+    digitalWrite(RELAY_MODULE, LOW);
 
     // DONE: Initialiseer de variabelen om de starttijd en duurtijd van het water geven te regelen
     waterTimer = millis() + duurtijd;
@@ -532,7 +564,7 @@ void zetWaterpompAan(int duurtijd) {
 void zetWaterpompUit() {
   TRACE();
   // DONE: Implementeer code om de pomp uit te zetten
-  digitalWrite(RELAY_MODULE, LOW);
+  digitalWrite(RELAY_MODULE, HIGH);
   
   // DONE: Initialiseer de variabelen om de starrtijd en duurtijd van het water geven te regelen
   waterStatus = GEEN_WATER_GEVEN;
@@ -561,7 +593,8 @@ void leesSensorenEnGeefWaterIndienNodig() {
     DUMP(resistieve_bvh_waarde);
     DUMP(temperatuur);
   }
-  BREAK();
+  //BREAK();
+  DUMP("BREAK");
 
   // Bepaal individuele categoriën en samengestelde categorie
   String categorieCapacitieveBVH = berekenCategorieCapactieveBHV(capacitieve_bvh_waarde);
@@ -570,21 +603,28 @@ void leesSensorenEnGeefWaterIndienNodig() {
   DUMP(categorieCapacitieveBVH);
   DUMP(categorieResistieveBVH);
   DUMP(categorie);
-  BREAK();
+  //BREAK();
+  DUMP("BREAK");
 
   // DONE: Beslis over water geven en pas de controles toe uit de flowchart.  
   // !! Gebruik enkel de constanten uit de configuratie om met een categorie te vergelijken!
   // !! Gebruik enkel de constanten uit de configuratie om de duurtijd van het water geven mee te geven
   // !! Gebruik verder enkel de functies zetWaterpompAan() aan te zetten
+
+  waterGevenTijdsInterval = WATER_GEVEN_INTERVAL_INACTIEF;
   if (categorie == VOCHTIGHEID_DROOG) {
     if (temperatuur > MAX_TEMPERATUUR) {
-      zetWaterpompAan(WATER_GEVEN_INTERVAL_LANG);
-      send_data(temperatuur, categorieResistieveBVH, categorieCapacitieveBVH, categorie, WATER_GEVEN_INTERVAL_LANG, huidigeOrientatie);
+      waterGevenTijdsInterval = WATER_GEVEN_INTERVAL_LANG;
     }
     else if (temperatuur > MIN_TEMPERATUUR) {
-      send_data(temperatuur, categorieResistieveBVH, categorieCapacitieveBVH, categorie, WATER_GEVEN_INTERVAL_KORT, huidigeOrientatie);
-      zetWaterpompAan(WATER_GEVEN_INTERVAL_KORT);
+      waterGevenTijdsInterval = WATER_GEVEN_INTERVAL_KORT;
     }
+  }
+
+  send_data(temperatuur, categorieResistieveBVH, categorieCapacitieveBVH, categorie, waterGevenTijdsInterval, waarschuwing);
+
+  if (waterGevenTijdsInterval != WATER_GEVEN_INTERVAL_INACTIEF) {
+    zetWaterpompAan(waterGevenTijdsInterval);
   }
 }
 
@@ -593,8 +633,18 @@ void panic_button() {
   panicButtonSchakelaar = HIGH;
   panicButtonDebounceTimer = millis() + PANIC_BUTTON_DEBOUNCE;
   zetWaterpompAan(WATER_GEVEN_INTERVAL_PANIC_BUTTON);
-  BREAK();
+  //BREAK();
+  DUMP("BREAK");
   timer = millis();
+}
+
+// zet alle ongebruikte GPIO pinnen uit, zodat deze geen problemen kunnen veroorzaken
+void protect_GPIOs() {
+  int pinList[9] = {2, 13, 14, 0, 26, 15, 35, 34, 12};
+  for (int i = 0; i <= 8; i++) {
+    pinMode(pinList[i], OUTPUT);
+    digitalWrite(pinList[i], LOW);
+  }
 }
 
 void setup() {
@@ -604,8 +654,17 @@ void setup() {
   pinMode(CAPACITIEVE_BODEMVOCHTIGHEIDS_SENSOR, INPUT);
   pinMode(ONE_WIRE_BUS, INPUT);
   pinMode(PANIC_BUTTON, INPUT_PULLUP);
+
+  // indien de 2-kanaals 3V relais module gebruikt word moet de relais op High gezet worden om deze uit te zetten, en op Low om deze op te zetten
   pinMode(RELAY_MODULE, OUTPUT);
-  digitalWrite(RELAY_MODULE, LOW);
+  digitalWrite(RELAY_MODULE, HIGH);
+
+  pinMode(POWER, OUTPUT);
+  digitalWrite(POWER, LOW);
+
+  delay(100);
+
+  protect_GPIOs();
 
   waterStatus = GEEN_WATER_GEVEN;
   panicButtonSchakelaar = LOW;
@@ -620,8 +679,17 @@ void setup() {
   delay(1000); //Take some time to open up the Serial Monitor
 
   //Increment boot number and print it every reboot
+  Serial.println("Booting...");
+  
+  esp_reset_reason_t reason = esp_reset_reason();
+  Serial.print("Reset reason: ");
+  Serial.println(reason);
+
   ++bootCount;
-  Serial.println("Boot number: " + String(bootCount));
+  Serial.print("Boot number: ");
+  Serial.println(bootCount);
+
+  esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_SLOW_MEM, ESP_PD_OPTION_ON);
 
   //Print the wakeup reason for ESP32
   get_wakeup_reason();
@@ -676,6 +744,7 @@ void loop() {
   long huidigeMillis = millis();
 
   if (I2C_SCHAKELAAR == HIGH) {
+    TRACE();
     huidigeOrientatie = acce.getOrientation();
     if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_START) {
       standaardOrientatie = huidigeOrientatie;
@@ -686,10 +755,16 @@ void loop() {
       }
       else {
         waarschuwing = WAARSCHUWING_GEVAAR;
+        DUMP(huidigeOrientatie);
+        DUMP(standaardOrientatie);
+        DUMP(deepSleepWakeUpReason);
       }
     }
-    DUMP(huidigeOrientatie);
-    DUMP(standaardOrientatie);
+    if (dataRedSwitch == LOW) {
+      DUMP(huidigeOrientatie);
+      DUMP(standaardOrientatie);
+      DUMP(deepSleepWakeUpReason);
+    }
   }
 
   // DONE: Controleer of sensoren ingelezen moeten worden en roep functie leesSensorenEnGeefWaterIndienNodig() aan indien nodig
@@ -699,7 +774,8 @@ void loop() {
       TRACE();
       DUMP(huidigeMillis);
       leesSensorenEnGeefWaterIndienNodig();
-      BREAK();
+      //BREAK();
+      DUMP("BREAK");
     }
     else if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_PANIC_BUTTON) {
       TRACE();
@@ -711,12 +787,5 @@ void loop() {
   }
   else if (huidigeMillis >= waterTimer) {
     zetWaterpompUit();
-    BREAK();
   }
-  // else if (panicButtonSchakelaar == LOW && digitalRead(PANIC_BUTTON) == HIGH) {
-  //   panic_button();
-  // }
-  // else if (panicButtonSchakelaar == HIGH && huidigeMillis >= panicButtonDebounceTimer) {
-  //   panicButtonSchakelaar = LOW;
-  // }
 }
