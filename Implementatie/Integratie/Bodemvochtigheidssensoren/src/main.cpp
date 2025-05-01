@@ -8,9 +8,35 @@
 
   // DEEP SLEEP met behulp van EXT0: https://www.programmingelectronics.com/external-wake-up-esp32/ (31/03/2025)
 
-  // I2C/accelerometer: https://github.com/DFRobot/DFRobot_LIS
-    // accelerometer orientatie: https://github.com/DFRobot/DFRobot_LIS/blob/master/examples/LIS2DW12/orientation/orientation.ino
+  // I2C/accelerometer: https://github.com/DFRobot/DFRobot_LIS (27/04/2025)
+    // accelerometer orientatie: https://github.com/DFRobot/DFRobot_LIS/blob/master/examples/LIS2DW12/orientation/orientation.ino (27/04/2025)
   
+  // Conversatie met Jorgen Aerts op 30/04/2025 over het gebruik van Resistors om het verbruik in deep sleep te verlagen door de Capacitieve en Resistieve Bodemvochtigheidsensoren uit te schakelen
+    // datasheet van de gebruikte resistoren (CEN MPSA14): https://my.centralsemi.com/datasheets/MPSA12-14.PDF (30/04/2025)
+
+  // CONFIGURATIE DEEP SLEEP:
+    /* 
+    tijdens dit project kwam ik enkele problemen met het betrouwbaar gebruiken van deep sleep tegen, 
+    met name het feit dat mijn ESP32 in plaats van in deep sleep te gaan opnieuw opstartte, 
+    om deze problemen op te lossen heb ik chatGPT om hulp gevraagd: https://chatgpt.com/share/68120ddd-5a1c-800c-b8c3-194a849e780a (28/04/2025)
+    ChatGPT maakte hiervoor gebruik van volgende bronnen:
+      https://github.com/espressif/esp-idf/blob/master/components/esp_system/include/esp_system.h
+      https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/system.html#_CPPv418esp_reset_reason_t
+      https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/system.html#brownout
+      https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/sleep_modes.html
+      https://www.espressif.com/sites/default/files/documentation/esp32_technical_reference_manual_en.pdf
+      https://github.com/espressif/arduino-esp32/blob/master/cores/esp32/esp_system.cpp
+      https://github.com/espressif/arduino-esp32#deep-sleep
+      https://github.com/DFRobot/DFRobot_LIS2DW12
+      https://www.esp32.com/viewtopic.php?t=14292
+      https://stackoverflow.com/questions/tagged/esp32+brownout
+      https://github.com/espressif/arduino-esp32/issues?q=brownout
+      https://randomnerdtutorials.com/esp32-deep-sleep-arduino-ide-wake-up-sources/
+      https://learn.adafruit.com/esp32-wroom-32/overview
+      https://learn.sparkfun.com/tutorials/
+    */
+  
+  // WiFi: https://randomnerdtutorials.com/solved-reconnect-esp32-to-wifi/ (12/04/2025)
 
 /**！
  * @file activityDetect.ino
@@ -39,7 +65,7 @@
  * @param addr  I2C address(0x18/0x19)
  */
 //DFRobot_LIS2DW12_I2C acce(&Wire,0x18);
-DFRobot_LIS2DW12_I2C acce;
+DFRobot_LIS2DW12_I2C acce(&Wire,0x19);
 
 int huidigeOrientatie = 0;
 
@@ -71,8 +97,9 @@ int huidigeOrientatie = 0;
 
 #define RELAY_MODULE 17                   // de relay voor de pomp
 
-#define POWER 26        // De power switch voor de sensoren
- 
+#define POWER_RESISTIVE 26        // De power switch voor de resistieve bodemvochtigheidsensor
+#define POWER_CAPACITIVE 16       // De power switch voor de capacitieve bodemvochtigheidsensor
+
 // Setup a oneWire instance to communicate with any OneWire device
 OneWire oneWire(ONE_WIRE_BUS);    
 
@@ -98,7 +125,26 @@ boolean panicButtonSchakelaar;
 String waarschuwing = WAARSCHUWING_INTIALISATIE;
 
 /*
-  placeholder source
+  Deep Sleep with External Wake Up
+  =====================================
+  This code displays how to use deep sleep with
+  an external trigger as a wake up source and how
+  to store data in RTC memory to use it over reboots
+
+  This code is under Public Domain License.
+
+  Hardware Connections
+  ======================
+  Push Button to GPIO 33 pulled down with a 10K Ohm
+  resistor
+
+  NOTE:
+  ======
+  Only RTC IO can be used as a source for external wake
+  source. They are pins: 0,2,4,12-15,25-27,32-39.
+
+  Author:
+  Pranav Cherukupalli <cherukupallip@gmail.com>
 */
 #include <driver/rtc_io.h>
 
@@ -118,8 +164,6 @@ String deepSleepWakeUpReason = "";
 // WIFI
   // NTP = Network Time Protocol
 const char *NTP_SERVER = "pool.ntp.org";
-const long GMT_OFFSET_SEC = 0; // 19800;
-const int DAYLIGHT_OFFSET_SEC = 0;
 
   // Google Apps Script URL
 const String GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/";
@@ -162,47 +206,58 @@ String getCurrentDateAndTime() {
   return asString;
 }
 
-void sendData(int dataTemperatuur, String dataResistieveSensor, String dataCapacitieveSensor, String dataBodemvochtigheidFinaal, int dataWaterTijd, String dataOrientatie) {
-  if (WiFi.status() == WL_CONNECTED) {
-    // Get current date and time
-    String currentDateAndTime = getCurrentDateAndTime();
-    Serial.print("Current date and time: ");
-    Serial.println(currentDateAndTime);
+void sendData(float dataTemperatuur, String dataResistieveSensor, String dataCapacitieveSensor, String dataBodemvochtigheidFinaal, int dataWaterTijd, String dataOrientatie) {
+  int wifiReconnect = 0;
+  while (wifiReconnect < (WIFI_TOEGESTANE_POGINGEN_HERSTEL + 1)) {
+    if (WiFi.status() == WL_CONNECTED) {
+      int dataTemperatuurInt = round(dataTemperatuur);
+      // Get current date and time
+      String currentDateAndTime = getCurrentDateAndTime();
+      Serial.print("Current date and time: ");
+      Serial.println(currentDateAndTime);
 
-    // Create URL with parameters to call Google Apps Script
-    String urlFinal = GOOGLE_APPS_SCRIPT_URL + GOOGLE_SCRIPT_DEPLOYMENT_ID + "/exec?" + 
-        "datum_tijdstip=" + currentDateAndTime + 
-        "&temperatuur=" + dataTemperatuur + 
-        "&resistieve_sensor=" + dataResistieveSensor +
-        "&capacitieve_sensor=" + dataCapacitieveSensor +
-        "&bodemvochtigheid_finaal=" + dataBodemvochtigheidFinaal +
-        "&water_tijd=" + dataWaterTijd + 
-        "&orientatie=" + dataOrientatie;
+      String dataStatus = deepSleepWakeUpReason;
 
-    Serial.print("POST data to spreadsheet: ");
-    Serial.println(urlFinal);
+      // Create URL with parameters to call Google Apps Script
+      String urlFinal = GOOGLE_APPS_SCRIPT_URL + GOOGLE_SCRIPT_DEPLOYMENT_ID + "/exec?" + 
+          "datum_tijdstip=" + currentDateAndTime + 
+          "&temperatuur=" + dataTemperatuurInt + 
+          "&resistieve_sensor=" + dataResistieveSensor +
+          "&capacitieve_sensor=" + dataCapacitieveSensor +
+          "&bodemvochtigheid_finaal=" + dataBodemvochtigheidFinaal +
+          "&water_tijd=" + dataWaterTijd + 
+          "&orientatie=" + dataOrientatie +
+          "&status=" + dataStatus;
 
-    // Send HTTP request and get status code
-    HTTPClient http;
-    http.begin(urlFinal.c_str());
-    // http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
-    int httpCode = http.GET();
-    Serial.print("HTTP Status Code: ");
-    Serial.println(httpCode);
+      Serial.print("POST data to spreadsheet: ");
+      Serial.println(urlFinal);
 
-    // Get response from HTTP request
-    String payload;
-    if (httpCode > 0) {
-      payload = http.getString();
-      Serial.println("Payload: " + payload);
+      // Send HTTP request and get status code
+      HTTPClient http;
+      http.begin(urlFinal.c_str());
+      // http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
+      int httpCode = http.GET();
+      Serial.print("HTTP Status Code: ");
+      Serial.println(httpCode);
+
+      // Get response from HTTP request
+      String payload;
+      if (httpCode > 0) {
+        payload = http.getString();
+        Serial.println("Payload: " + payload);
+      }
+      http.end();
+      wifiReconnect = WIFI_TOEGESTANE_POGINGEN_HERSTEL;
     }
-    http.end();
+    else if (wifiReconnect < 1) {
+      initWifi();
+    }
+    ++wifiReconnect;
   }
 }
 
 /*
-Method to print the reason by which ESP32
-has been awaken from sleep
+Method to print the reason by which ESP32 has been awaken from sleep
 */
 void getWakeupReason() {
   TRACE();
@@ -263,9 +318,10 @@ void activateDeepSleep(int currentTime) {
   WiFi.mode(WIFI_OFF);
   delay(100);
 
-  digitalWrite(POWER, HIGH);
+  digitalWrite(POWER_CAPACITIVE, LOW);
+  digitalWrite(POWER_RESISTIVE, LOW);
 
-  delay (50);
+  delay (500);
 
   if (currentTime < (TIJD_INTERVAL_SENSOREN - 500)) {
     sleepTimer = TIJD_INTERVAL_SENSOREN - currentTime;
@@ -593,8 +649,7 @@ void leesSensorenEnGeefWaterIndienNodig() {
     DUMP(resistieve_bvh_waarde);
     DUMP(temperatuur);
   }
-  //BREAK();
-  DUMP("BREAK");
+  BREAK();
 
   // Bepaal individuele categoriën en samengestelde categorie
   String categorieCapacitieveBVH = berekenCategorieCapactieveBHV(capacitieve_bvh_waarde);
@@ -603,22 +658,26 @@ void leesSensorenEnGeefWaterIndienNodig() {
   DUMP(categorieCapacitieveBVH);
   DUMP(categorieResistieveBVH);
   DUMP(categorie);
-  //BREAK();
-  DUMP("BREAK");
+  BREAK();
 
   // DONE: Beslis over water geven en pas de controles toe uit de flowchart.  
   // !! Gebruik enkel de constanten uit de configuratie om met een categorie te vergelijken!
   // !! Gebruik enkel de constanten uit de configuratie om de duurtijd van het water geven mee te geven
   // !! Gebruik verder enkel de functies zetWaterpompAan() aan te zetten
 
-  waterGevenTijdsInterval = WATER_GEVEN_INTERVAL_INACTIEF;
   if (categorie == VOCHTIGHEID_DROOG) {
-    if (temperatuur > MAX_TEMPERATUUR) {
+    if (temperatuur >= MAX_TEMPERATUUR) {
       waterGevenTijdsInterval = WATER_GEVEN_INTERVAL_LANG;
     }
-    else if (temperatuur > MIN_TEMPERATUUR) {
+    else if (temperatuur >= MIN_TEMPERATUUR) {
       waterGevenTijdsInterval = WATER_GEVEN_INTERVAL_KORT;
     }
+    else {
+      waterGevenTijdsInterval = WATER_GEVEN_INTERVAL_INACTIEF;
+    }
+  }
+  else {
+    waterGevenTijdsInterval = WATER_GEVEN_INTERVAL_INACTIEF;
   }
 
   sendData(temperatuur, categorieResistieveBVH, categorieCapacitieveBVH, categorie, waterGevenTijdsInterval, waarschuwing);
@@ -633,14 +692,32 @@ void panicButton() {
   panicButtonSchakelaar = HIGH;
   panicButtonDebounceTimer = millis() + PANIC_BUTTON_DEBOUNCE;
   zetWaterpompAan(WATER_GEVEN_INTERVAL_PANIC_BUTTON);
-  //BREAK();
-  DUMP("BREAK");
+
+  // Collect data
+  int capacitieve_bvh_waarde = leesCapacitieveBVHSensor();
+  int resistieve_bvh_waarde = leesResistieveBVHSensor();
+  int temperatuur = leesTemperatuur();
+  DUMP(capacitieve_bvh_waarde);
+  DUMP(resistieve_bvh_waarde);
+  DUMP(temperatuur);
+
+  String categorieCapacitieveBVH = berekenCategorieCapactieveBHV(capacitieve_bvh_waarde);
+  String categorieResistieveBVH = berekenCategorieResistieveBVH(resistieve_bvh_waarde);
+  String categorie = berekenSamengesteldeCategorie(categorieCapacitieveBVH, categorieResistieveBVH);
+  DUMP(categorieCapacitieveBVH);
+  DUMP(categorieResistieveBVH);
+  DUMP(categorie);
+
+  // Send data
+  sendData(temperatuur, categorieResistieveBVH, categorieCapacitieveBVH, categorie, WATER_GEVEN_INTERVAL_PANIC_BUTTON, waarschuwing);
+
+  // BREAK();
   timer = millis();
 }
 
 // zet alle ongebruikte GPIO pinnen uit, zodat deze geen problemen kunnen veroorzaken
 void protectGPIOs() {
-  int pinList[9] = {2, 13, 14, 0, 26, 15, 35, 34, 12};
+  int pinList[9] = {2, 13, 14, 0, 15, 35, 34, 12};
   for (int i = 0; i <= 8; i++) {
     pinMode(pinList[i], OUTPUT);
     digitalWrite(pinList[i], LOW);
@@ -659,11 +736,6 @@ void setup() {
   pinMode(RELAY_MODULE, OUTPUT);
   digitalWrite(RELAY_MODULE, HIGH);
 
-  pinMode(POWER, OUTPUT);
-  digitalWrite(POWER, LOW);
-
-  delay(100);
-
   protectGPIOs();
 
   waterStatus = GEEN_WATER_GEVEN;
@@ -675,6 +747,11 @@ void setup() {
   waterTimer = millis();
   panicButtonDebounceTimer = millis();
   dataRedSwitch = LOW;
+
+  pinMode(POWER_CAPACITIVE, OUTPUT);
+  digitalWrite(POWER_CAPACITIVE, HIGH);
+  pinMode(POWER_RESISTIVE, OUTPUT);
+  digitalWrite(POWER_RESISTIVE, HIGH);
 
   delay(1000); //Take some time to open up the Serial Monitor
 
@@ -744,7 +821,6 @@ void loop() {
   long huidigeMillis = millis();
 
   if (I2C_SCHAKELAAR == HIGH) {
-    TRACE();
     huidigeOrientatie = acce.getOrientation();
     if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_START) {
       standaardOrientatie = huidigeOrientatie;
@@ -761,6 +837,7 @@ void loop() {
       }
     }
     if (dataRedSwitch == LOW) {
+      TRACE();
       DUMP(huidigeOrientatie);
       DUMP(standaardOrientatie);
       DUMP(deepSleepWakeUpReason);
@@ -774,8 +851,7 @@ void loop() {
       TRACE();
       DUMP(huidigeMillis);
       leesSensorenEnGeefWaterIndienNodig();
-      //BREAK();
-      DUMP("BREAK");
+      // BREAK();
     }
     else if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_PANIC_BUTTON) {
       TRACE();

@@ -23,15 +23,22 @@ const String WATER_GEVEN = "WATER GEVEN";
 
   // Deep Sleep mogelijkheden
 const String DEEP_SLEEP_WAKE_UP_START = "STARTUP";
-const String DEEP_SLEEP_WAKE_UP_TIME = "DEEP SLEEP TIMER";
-const String DEEP_SLEEP_WAKE_UP_PANIC_BUTTON = "DEEP SLEEP PANIC BUTTON";
-const String DEEP_SLEEP_WAKE_UP_UNDEFINED = "DEEP SLEEP NOT DEFINED";
+const String DEEP_SLEEP_WAKE_UP_TIME = "DEEP_SLEEP_TIMER";
+const String DEEP_SLEEP_WAKE_UP_PANIC_BUTTON = "PANIC_BUTTON";
+const String DEEP_SLEEP_WAKE_UP_UNDEFINED = "DEEP_SLEEP_NOT_DEFINED";
 
 // waarschuwing
 const String WAARSCHUWING_GEVAAR = "OMGEVALLEN";
 const String WAARSCHUWING_OK = "RECHT";
 
 const int WIFI_TOEGESTANE_POGINGEN = 5;
+const int WIFI_TOEGESTANE_POGINGEN_HERSTEL = 1;
+
+// WIFI
+  // NTP = Network Time Protocol
+const long GMT_OFFSET_SEC = 0; // 19800;  // GMT time offset in seconden
+const int DAYLIGHT_OFFSET_SEC = 0;        // Daylight offset in seconden
+
 
 // acce
 /* 
@@ -83,20 +90,20 @@ const bool I2C_SCHAKELAAR = HIGH;   // Schakel de I2C verbinding in(HIGH)/uit(LO
 const String WAARSCHUWING_INTIALISATIE = WAARSCHUWING_OK;    // wat is de default waarde van de waarschuwings constante ("GEVAAR"/"OK"), nuttig bij debuggen
 
 // MOCK
-const bool MOCK_SCHAKELAAR = HIGH;   // schakel alle mock waarden aan(HIGH)/uit(LOW)
+const bool MOCK_SCHAKELAAR = LOW;   // schakel alle mock waarden aan(HIGH)/uit(LOW)
 
-const bool CAPACITIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR = HIGH;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
-const int CAPACITIEVE_SENSOR_MOCK_WAARDE = 0;
+const bool CAPACITIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR = LOW;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
+const int CAPACITIEVE_SENSOR_MOCK_WAARDE = 1000;
 const int CAPACITIEVE_SENSOR_MOCK_RANDOM_WAARDE_1 = 0;
 const int CAPACITIEVE_SENSOR_MOCK_RANDOM_WAARDE_2 = 4095;
 
-const bool RESISTIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR = HIGH;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
-const int RESISTIEVE_SENSOR_MOCK_WAARDE = 0;
+const bool RESISTIEVE_SENSOR_MOCK_RANDOM_SCHAKELAAR = LOW;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
+const int RESISTIEVE_SENSOR_MOCK_WAARDE = 4000;
 const int RESISTIEVE_SENSOR_MOCK_RANDOM_WAARDE_1 = 0;
 const int RESISTIEVE_SENSOR_MOCK_RANDOM_WAARDE_2 = 4095;
 
-const bool TEMPERATUUR_SENSOR_MOCK_RANDOM_SCHAKELAAR = HIGH;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
-const int TEMPERATUUR_SENSOR_MOCK_WAARDE = 0;
+const bool TEMPERATUUR_SENSOR_MOCK_RANDOM_SCHAKELAAR = LOW;  // schakel alle willekeurige mock waarden aan(HIGH)/uit(LOW)
+const int TEMPERATUUR_SENSOR_MOCK_WAARDE = 30;
 const int TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_1 = 0;
 const int TEMPERATUUR_SENSOR_MOCK_RANDOM_WAARDE_2 = 30;
 
