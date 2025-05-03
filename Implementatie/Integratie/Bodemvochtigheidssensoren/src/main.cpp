@@ -84,7 +84,7 @@ int huidigeOrientatie = 0;
 #include <esp_system.h>
 #include <esp_sleep.h>
 
-#define ARDUINOTRACE_ENABLE 1  // schakel alle trace-commando's aan(1)/uit(0)
+#define ARDUINOTRACE_ENABLE 0  // schakel alle trace-commando's aan(1)/uit(0)
 #include <ArduinoTrace.h>
 
 // DONE: Definieer juiste pinnummers voor sensoren
@@ -192,12 +192,11 @@ void setTimezone(String timezone) {
 String getCurrentDateAndTime() {
   struct tm timeinfo;
   if (!getLocalTime(&timeinfo))   {
-    Serial.println("Failed to obtain time");
+    Serial.println("Kon tijd niet ophalen");
     return "";
   }
 
   char timeStringBuff[50]; // 50 chars should be enough
-  //strftime(timeStringBuff, sizeof(timeStringBuff), "%A, %B %d %Y %H:%M:%S", &timeinfo);
   strftime(timeStringBuff, sizeof(timeStringBuff), "%d-%m-%Y_%H:%M:%S", &timeinfo);
 
   String asString(timeStringBuff);
@@ -208,7 +207,7 @@ String getCurrentDateAndTime() {
 
 void sendData(float dataTemperatuur, String dataResistieveSensor, String dataCapacitieveSensor, String dataBodemvochtigheidFinaal, int dataWaterTijd, String dataOrientatie) {
   int wifiReconnect = 0;
-  while (wifiReconnect < (WIFI_TOEGESTANE_POGINGEN_HERSTEL + 1)) {
+  while (wifiReconnect < (WIFI_TOEGESTANE_POGINGEN_HERSTEL_VERBINDING + 1)) {
     if (WiFi.status() == WL_CONNECTED) {
       int dataTemperatuurInt = round(dataTemperatuur);
       // Get current date and time
@@ -247,10 +246,14 @@ void sendData(float dataTemperatuur, String dataResistieveSensor, String dataCap
         Serial.println("Payload: " + payload);
       }
       http.end();
-      wifiReconnect = WIFI_TOEGESTANE_POGINGEN_HERSTEL;
+      wifiReconnect = WIFI_TOEGESTANE_POGINGEN_HERSTEL_VERBINDING;
     }
     else if (wifiReconnect < 1) {
       initWifi();
+    }
+    else {
+      // Log een conectiefout
+      Serial.println("Kon geen verbinding maken met WiFi");
     }
     ++wifiReconnect;
   }
@@ -711,7 +714,6 @@ void panicButton() {
   // Send data
   sendData(temperatuur, categorieResistieveBVH, categorieCapacitieveBVH, categorie, WATER_GEVEN_INTERVAL_PANIC_BUTTON, waarschuwing);
 
-  // BREAK();
   timer = millis();
 }
 
@@ -851,7 +853,6 @@ void loop() {
       TRACE();
       DUMP(huidigeMillis);
       leesSensorenEnGeefWaterIndienNodig();
-      // BREAK();
     }
     else if (deepSleepWakeUpReason == DEEP_SLEEP_WAKE_UP_PANIC_BUTTON) {
       TRACE();
